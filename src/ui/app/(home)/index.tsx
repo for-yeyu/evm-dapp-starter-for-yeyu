@@ -1,6 +1,8 @@
 import type { ComponentProps, FC } from 'react'
 import Link from 'next/link'
-import { sharedConfig } from '@/configs/shared'
+import { appConfig } from '@/configs/app'
+import { environmentConfig } from '@/configs/environment'
+import { walletConfig } from '@/configs/wallet'
 import { ServerConfig } from '@/ui/app/(home)/server-config'
 
 export const HomePage: FC<ComponentProps<'div'>> = () => {
@@ -8,9 +10,9 @@ export const HomePage: FC<ComponentProps<'div'>> = () => {
     <div className="container">
       <h1>Home</h1>
       <div className="mt-3 space-y-1">
-        <div>Environment: {sharedConfig.env.environment}</div>
-        <div>App Name: {sharedConfig.appConfig.appName}</div>
-        <div>WalletConnect Project ID: {sharedConfig.appConfig.walletConnectProjectId}</div>
+        <div>Environment: {environmentConfig.environment}</div>
+        <div>App Name: {appConfig.appName}</div>
+        <div>WalletConnect Project ID: {walletConfig.walletConnectProjectId}</div>
       </div>
       <ServerConfig className="mt-4" />
       <div className="mt-3 flex flex-col space-y-2">

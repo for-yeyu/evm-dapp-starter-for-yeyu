@@ -30,7 +30,7 @@ src/
   ui/         # UI implementation (pages + shared components)
   api/        # Request functions by domain (query/mutation/types)
   hooks/      # Hooks layer (React Query wrappers over src/api)
-  configs/    # Environment/config schemas and runtime config
+  configs/    # Domain runtime config and build-time env validation
   lib/        # Infrastructure layer (errors/http/runtime/web3/utils)
   styles/     # Global style entry, shadcn base css, fonts
 ```
@@ -53,7 +53,7 @@ All project architecture docs:
 - `src/ui/README.md`: UI structure and component organization
 - `src/api/README.md`: API request layer rules
 - `src/hooks/README.md`: Hook layer and React Query conventions
-- `src/configs/README.md`: Config schema/shared/server boundaries
+- `src/configs/README.md`: Env validation and domain config boundaries
 - `src/lib/README.md`: Infrastructure modules and change policy
 - `src/styles/README.md`: Style entry and CSS extension rules
 

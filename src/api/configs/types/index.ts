@@ -1,3 +1,3 @@
 export type GetServerConfigResult = {
-  JwtSecret: string
+  jwtSecret: string
 }

@@ -1,14 +1,8 @@
 import type { NextConfig } from 'next'
+import { validateConfigEnv } from './src/configs/validator'
 
-// if (process.env.NODE_ENV === 'development') {
-// }
+validateConfigEnv()
 
-const config: NextConfig = {
-  // webpack: config => {
-  //   config.externals.push('pino-pretty')
-  //   config.resolve.alias['@react-native-async-storage/async-storage'] = false
-  //   return config
-  // },
-}
+const config: NextConfig = {}
 
 export default config

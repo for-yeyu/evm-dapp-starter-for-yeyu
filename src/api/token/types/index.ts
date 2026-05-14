@@ -1,25 +1,25 @@
 import type { Address } from 'viem'
-import type { SharedChainId } from '@/configs/shared'
+import type { SupportedChainId } from '@/configs/chains'
 
 export type GetDecimalsParams = {
-  chainId: SharedChainId
+  chainId: SupportedChainId
   address: Address | null
 }
 
 export type GetSymbolParams = {
-  chainId: SharedChainId
+  chainId: SupportedChainId
   address: Address | null
 }
 
 export type GetBalanceParams = {
-  chainId: SharedChainId
+  chainId: SupportedChainId
   address: Address | null
   account: Address
   decimals: number
 }
 
 export type TransferTokenParams = {
-  chainId: SharedChainId
+  chainId: SupportedChainId
   address: Address | null
   account: Address
   decimals: number

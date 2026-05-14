@@ -4,7 +4,7 @@ import type { ComponentProps, FC } from 'react'
 import { skipToken } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'viem'
-import { type SharedChainId, sharedConfig } from '@/configs/shared'
+import { chainConfig, type SupportedChainId } from '@/configs/chains'
 import { useBalance, useDecimals, useSymbol, useTokenTransfer } from '@/hooks/api/token'
 import { useEvmStore } from '@/lib/common/web3/evm-store'
 import { formatNumber } from '@/lib/utils/formatter/formatters'
@@ -17,7 +17,7 @@ export const TransferPage: FC<ComponentProps<'div'>> = () => {
 
   const account = useEvmStore(state => state.connectorAccount)
 
-  const [tokenChainId, setTokenChainId] = useState<SharedChainId | null>(null)
+  const [tokenChainId, setTokenChainId] = useState<SupportedChainId | null>(null)
 
   const [tokenText, setTokenText] = useState('')
 
@@ -27,7 +27,7 @@ export const TransferPage: FC<ComponentProps<'div'>> = () => {
   }
 
   const token =
-    tokenText === sharedConfig.chains[chainId].nativeCurrency.symbol
+    tokenText === chainConfig.chains[chainId].nativeCurrency.symbol
       ? null
       : isAddress(tokenText)
         ? tokenText
@@ -78,7 +78,7 @@ export const TransferPage: FC<ComponentProps<'div'>> = () => {
 
       <div>Token:</div>
       <Input
-        placeholder={`${sharedConfig.chains[chainId].nativeCurrency.symbol} or 0x...`}
+        placeholder={`${chainConfig.chains[chainId].nativeCurrency.symbol} or 0x...`}
         value={tokenText}
         onChange={event => changeToken(event.target.value)}
       />

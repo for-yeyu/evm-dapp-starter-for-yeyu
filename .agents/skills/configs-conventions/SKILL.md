@@ -1,6 +1,6 @@
 ---
 name: configs-conventions
-description: Use when adding or updating runtime configuration schemas, shared/server config modules, or runtime config consumption patterns in src/configs.
+description: Use when adding or updating domain runtime config, server-only config, or build-time env validation in src/configs.
 ---
 
 # Configs Conventions
@@ -13,41 +13,44 @@ Applies to `src/configs/**` and to code that consumes runtime config from this l
 
 ```text
 src/configs/
-  schema/   # schema + config types only
-  shared/   # non-secret runtime config (client+server safe)
-  server/   # secret runtime config (server-only)
+  validator/       # zod validation called by next.config.ts only
+  app.ts           # public app identity config
+  environment.ts   # public environment config and type
+  wallet.ts        # public wallet provider config
+  chains.ts        # public EVM chain config
+  server.ts        # server-only secrets
 ```
 
-- `shared/index.ts` is the external runtime config entry and exports `sharedConfig`.
-- `server/index.ts` is the external secret config entry and exports `serverConfig`.
+- Runtime config is split by domain instead of a broad client/server bucket.
+- `server.ts` is the external secret config entry and exports `serverConfig`.
 
 ## Hard Rules
 
-1. `schema/` defines schemas/types only and does not read `process.env`.
-2. `shared/` reads non-secret env values and validates via `schema`.
-3. `server/` reads secret env values and must include `import 'server-only'`.
-4. `shared` modules must not depend on `server` modules.
-5. `schema/index.ts` is the unified schema export entry.
-6. External runtime config consumption must go through `@/configs/shared` or `@/configs/server`.
-7. Do not import `@/configs/shared/*` or `@/configs/server/*` directly outside config implementation files.
-8. Internal config modules may import sibling config modules only when needed for initialization order or to avoid circular barrel usage.
+1. `validator/` is the only place under `src/configs` that imports `zod`.
+2. `next.config.ts` calls the validator entry before exporting config.
+3. Runtime config modules read already-validated `process.env` values and narrow them with TypeScript types.
+4. Runtime config modules must not import from `validator/`.
+5. Client-safe config must be split by domain (`app`, `environment`, `wallet`, `chains`) instead of a single broad client object.
+6. Secret config must live in `server.ts` and include `import 'server-only'`.
+7. Client components must never import `@/configs/server`.
+8. `zod` must not be reachable from client-side imports.
 
 ## Workflow
 
-1. Add schema in `schema/<name>.ts`.
-2. Export schema from `schema/index.ts`.
-3. Add runtime parser in `shared/<name>.ts` or `server/<name>.ts`.
-4. Aggregate the new runtime exports through `sharedConfig` or `serverConfig` in the corresponding `index.ts`.
-5. Consume runtime values via `@/configs/shared` or `@/configs/server`.
-6. If external code needs a config-derived type, export that type from the barrel entry as well.
+1. Add or update the matching validator module in `validator/<domain>.ts`.
+2. Export or call that validator from `validator/index.ts`.
+3. Add the typed runtime value to the matching domain config module.
+4. Consume public values from their domain module, for example `@/configs/app` or `@/configs/chains`.
+5. Consume secrets only from `@/configs/server` in server-only code.
+6. If external code needs a config-derived type, export it from the domain module.
 
 ## Review Checklist
 
-- New config has schema in `schema/`.
-- `schema/index.ts` is updated.
+- Zod imports exist only in `src/configs/validator/**`.
+- `next.config.ts` calls the validator entry.
+- Runtime config stays split by domain.
 - Secret config uses `server-only`.
-- `shared/index.ts` and `server/index.ts` remain the external runtime config entry points.
-- No external direct imports remain from `@/configs/shared/*` or `@/configs/server/*`.
+- No client code imports `@/configs/server`.
 - Import boundaries remain explicit and safe.
 
 ## References

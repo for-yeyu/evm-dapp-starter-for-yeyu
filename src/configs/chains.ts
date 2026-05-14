@@ -1,7 +1,7 @@
 import type { Chain } from 'viem'
-import type { Environment } from '../schema'
+import type { Environment } from './environment'
 import { arbitrum, arbitrumSepolia, mainnet, sepolia } from 'viem/chains'
-import { env } from './env'
+import { environmentConfig } from './environment'
 
 export enum ChainId {
   Mainnet = 1,
@@ -15,11 +15,19 @@ const supportedChainIdsByEnvironment: Record<Environment, [ChainId, ChainId]> = 
   development: [ChainId.Sepolia, ChainId.ArbitrumSepolia],
 }
 
-export const supportedChainIds = supportedChainIdsByEnvironment[env.environment]
-
-export const chains: Record<ChainId, Chain> = {
+const chains = {
   [ChainId.Mainnet]: mainnet,
   [ChainId.Arbitrum]: arbitrum,
   [ChainId.Sepolia]: sepolia,
   [ChainId.ArbitrumSepolia]: arbitrumSepolia,
+} satisfies Record<ChainId, Chain>
+
+const supportedChainIds = supportedChainIdsByEnvironment[environmentConfig.environment]
+
+export const chainConfig = {
+  supportedChainIds,
+  supportedChains: [chains[supportedChainIds[0]], chains[supportedChainIds[1]]] as [Chain, Chain],
+  chains,
 }
+
+export type SupportedChainId = (typeof chainConfig.supportedChainIds)[number]

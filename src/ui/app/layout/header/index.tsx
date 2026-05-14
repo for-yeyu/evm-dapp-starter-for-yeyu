@@ -2,7 +2,7 @@
 
 import type { ComponentProps, FC } from 'react'
 import Link from 'next/link'
-import { sharedConfig } from '@/configs/shared'
+import { appConfig } from '@/configs/app'
 import { cn } from '@/lib/utils/shadcn'
 import { Connect } from './connect'
 import { SwitchChain } from './switch-chain'
@@ -16,7 +16,7 @@ export const Header: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
     >
       <div className="container m-auto flex justify-between">
         <Link href={'/'} className="text-2xl hover:underline">
-          {sharedConfig.appName}
+          {appConfig.appName}
         </Link>
 
         <div className="flex space-x-4">

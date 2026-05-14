@@ -18,7 +18,7 @@ src/
   ui/         # Page and component implementation layer
   api/        # Request function layer (types + query/mutation when needed)
   hooks/      # Client-only calling layer (React Query)
-  configs/    # Config layer (schema/shared/server)
+  configs/    # Domain runtime config + build-time env validation
   lib/        # Infrastructure layer (errors/http/runtime/web3/utils)
   styles/     # Global style entry layer
 ```
@@ -95,9 +95,9 @@ For an old page `legacy/<feature>`, always use this order:
 - Pages call hooks only, never request functions directly
 
 5. Config and constants migration (`src/configs`)
-- Put config schema in `schema/`
-- Put client-safe config in `shared/`
-- Put secrets in `server/` with `import 'server-only'`
+- Put zod validation in `validator/`
+- Put client-safe config in domain modules such as `app.ts`, `environment.ts`, `wallet.ts`, and `chains.ts`
+- Put secrets in `server.ts` with `import 'server-only'`
 
 6. Infrastructure dependency check (`src/lib`)
 - Reuse existing infra utilities whenever possible
@@ -164,7 +164,7 @@ find src/app -type f \\( -name "page.tsx" -o -name "layout.tsx" \\) -print0 | xa
 4. Find server-config boundary violations:
 
 ```bash
-rg -n "@/configs/server/" src/ui src/hooks src/app
+rg -n "@/configs/server" src/ui src/hooks
 ```
 
 ---
@@ -176,7 +176,7 @@ A migrated business slice is complete only if all conditions are met:
 1. Route layer is thin and UI is in `src/ui/app`.
 2. Request functions are in `src/api` and organized by `types` + needed `query/mutation` folders.
 3. Pages use `src/hooks`; no direct client requests exist.
-4. Config is split by `schema/shared/server` with correct boundaries.
+4. Config is split by domain runtime modules and validator modules with correct boundaries.
 5. No unnecessary infra-core changes in `src/lib`.
 6. Style changes follow `src/styles/index.css` import-entry rules.
 7. `pnpm lint`, `pnpm typecheck`, and required tests pass.

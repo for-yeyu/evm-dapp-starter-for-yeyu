@@ -16,7 +16,7 @@ Use this skill for any implementation, refactor, or review task in this reposito
 3. `src/api` owns request functions.
 4. `src/hooks` is the only client-facing API call layer.
 5. Client components must not request APIs directly.
-6. `src/configs` owns runtime config schema/shared/server boundaries.
+6. `src/configs` owns domain runtime config and build-time env validation boundaries.
 7. `src/lib` is infrastructure and should remain stable.
 8. `src/styles` owns global style entry and CSS import wiring.
 

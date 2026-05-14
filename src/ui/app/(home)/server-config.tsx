@@ -25,7 +25,7 @@ export const ServerConfig: FC<ComponentProps<'div'>> = ({ className, ...props })
       <Button type="button" variant="outline" onClick={onGetServerConfig} disabled={isLoading}>
         {isLoading ? 'Loading...' : 'Get Server Config'}
       </Button>
-      {serverConfig != null && <div>JwtSecret: {serverConfig.JwtSecret}</div>}
+      {serverConfig != null && <div>JwtSecret: {serverConfig.jwtSecret}</div>}
       {errorMessage != null && <div className="text-red-600">Error: {errorMessage}</div>}
     </div>
   )

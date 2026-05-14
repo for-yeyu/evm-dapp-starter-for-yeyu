@@ -1,4 +1,3 @@
-import type { Chain } from 'viem'
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 import { createConfig, BaseError as WagmiBaseError } from '@wagmi/core'
 import {
@@ -7,22 +6,21 @@ import {
   BaseError as ViemBaseError,
   UserRejectedRequestError as ViemUserRejectedRequestError,
 } from 'viem'
-import { sharedConfig } from '@/configs/shared'
+import { appConfig } from '@/configs/app'
+import { chainConfig } from '@/configs/chains'
+import { walletConfig } from '@/configs/wallet'
 import { UnknownEvmError, UserRejectedRequestError } from '../errors/evm'
 
 export const wagmiConfig = createConfig({
-  chains: sharedConfig.supportedChainIds.map(chainId => sharedConfig.chains[chainId]) as [
-    Chain,
-    ...Chain[],
-  ],
+  chains: chainConfig.supportedChains,
   client: ({ chain }) => {
     return createClient({ chain, transport: http() })
   },
   connectors:
     typeof window !== 'undefined'
       ? getDefaultWallets({
-          appName: sharedConfig.appName,
-          projectId: sharedConfig.walletConnectProjectId,
+          appName: appConfig.appName,
+          projectId: walletConfig.walletConnectProjectId,
         }).connectors
       : undefined,
 })
