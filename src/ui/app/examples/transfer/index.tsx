@@ -1,8 +1,9 @@
 'use client'
 
+import type { GetConnectionReturnType } from '@wagmi/core'
 import type { ComponentProps, FC } from 'react'
 import { skipToken } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { isAddress } from 'viem'
 import { chainConfig, type SupportedChainId } from '@/configs/chains'
 import { useBalance, useDecimals, useSymbol, useTokenTransfer } from '@/hooks/api/token'
@@ -14,9 +15,15 @@ import { Input } from '@/ui/shadcn/input'
 
 export const TransferPage: FC<ComponentProps<'div'>> = () => {
   const chainId = useEvmStore(state => state.chainId)
-
   const account = useEvmStore(state => state.connectorAccount)
 
+  return <TransferForm key={chainId} chainId={chainId} account={account} />
+}
+
+const TransferForm: FC<{
+  chainId: SupportedChainId
+  account: GetConnectionReturnType['address']
+}> = ({ chainId, account }) => {
   const [tokenChainId, setTokenChainId] = useState<SupportedChainId | null>(null)
 
   const [tokenText, setTokenText] = useState('')
@@ -65,11 +72,6 @@ export const TransferPage: FC<ComponentProps<'div'>> = () => {
       await mutationTransfer({ chainId, address: token, account, decimals, to, amount })
     }
   }
-
-  useEffect(() => {
-    setTokenChainId(chainId)
-    setTokenText('')
-  }, [chainId])
 
   return (
     <div className={cn('grid w-160 grid-cols-[auto_1fr] items-center gap-4')}>

@@ -4,48 +4,72 @@ import type { FC } from 'react'
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { BaseError } from '@/lib/common/errors/base'
-import { useErrorStore } from '@/lib/common/errors/error-store'
+import { errorStore } from '@/lib/common/errors/error-store'
 import { initializeErrorStore } from '@/lib/runtime/init-error-store'
 
 export const ErrorHandler: FC = () => {
-  const lastError = useErrorStore(state => state.lastError)
-  const setLastError = useErrorStore(state => state.setLastError)
-
   const recentMessages = useRef<Partial<Record<string, boolean>>>({})
 
-  useEffect(() => initializeErrorStore(), [])
-
   useEffect(() => {
-    if (lastError != null) {
-      setLastError(null)
+    const removeErrorStoreListeners = initializeErrorStore()
 
-      if (lastError instanceof BaseError) {
-        setTimeout(() => {
-          if (!lastError.handled) {
-            lastError.handled = true
+    const timeoutIds = new Set<number>()
+    const unsubscribe = errorStore.subscribe(state => {
+      const currentError = state.lastError
 
-            if (recentMessages.current[lastError.message] !== true) {
-              recentMessages.current[lastError.message] = true
+      if (currentError == null) {
+        return
+      }
 
-              toast.error(lastError.message)
+      state.setLastError(null)
 
-              setTimeout(() => {
-                delete recentMessages.current[lastError.message]
+      if (currentError instanceof BaseError) {
+        const handleTimeoutId = window.setTimeout(() => {
+          timeoutIds.delete(handleTimeoutId)
+
+          if (!currentError.handled) {
+            currentError.handled = true
+
+            if (recentMessages.current[currentError.message] !== true) {
+              recentMessages.current[currentError.message] = true
+
+              toast.error(currentError.message)
+
+              const resetTimeoutId = window.setTimeout(() => {
+                timeoutIds.delete(resetTimeoutId)
+                delete recentMessages.current[currentError.message]
               }, 1000)
+
+              timeoutIds.add(resetTimeoutId)
             }
           }
         })
-        if (lastError.needFix) {
-          console.error(lastError)
+
+        timeoutIds.add(handleTimeoutId)
+
+        if (currentError.needFix) {
+          console.error(currentError)
         } else {
           // biome-ignore lint/suspicious/noConsole: intentional logging for non-critical errors
-          console.log(lastError)
+          console.log(currentError)
         }
-      } else {
-        console.error(lastError)
+
+        return
       }
+
+      console.error(currentError)
+    })
+
+    return () => {
+      unsubscribe()
+      removeErrorStoreListeners()
+
+      for (const timeoutId of timeoutIds) {
+        window.clearTimeout(timeoutId)
+      }
+      timeoutIds.clear()
     }
-  }, [lastError, setLastError])
+  }, [])
 
   return null
 }

@@ -19,7 +19,7 @@ export const Header: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
           {appConfig.appName}
         </Link>
 
-        <div className="flex space-x-4">
+        <div className="flex gap-4">
           <SwitchChain />
           <Connect />
           <SwitchTheme />
