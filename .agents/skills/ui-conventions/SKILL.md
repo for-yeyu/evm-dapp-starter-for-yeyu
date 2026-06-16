@@ -16,6 +16,7 @@ Applies to `src/ui/**`.
 3. Internal child files use lowercase kebab-case (for example `server-config.tsx`).
 4. Shared route layout components live in `src/ui/app/layout`.
 5. Route-group-local layout components may live in route-local `layout/` folders.
+6. Do not create `index.ts` barrel exports for UI modules.
 
 ## Component Authoring Rules
 
@@ -29,7 +30,8 @@ Hard constraints:
 
 - Except `src/ui/svgs/**`, components should not consume `props`/`className` by default.
 - For non-`svgs` components, keep empty parameter signatures unless explicitly required.
-- Treat `src/ui/shadcn/**` as vendor-like primitives; avoid edits unless necessary.
+- Treat `src/ui/shadcn/**` as generated/vendor-like primitives; do not modify files in this directory.
+- Do not modify `src/lib/utils/shadcn/**`; it supports shadcn primitives.
 
 ## Workflow
 
@@ -43,7 +45,8 @@ Hard constraints:
 - Route UI entry files use `index.tsx`.
 - Internal file names follow kebab-case.
 - Non-`svgs` components avoid `props`/`className` by default.
-- `shadcn` components are not modified without a clear reason.
+- `src/ui/shadcn/**` and `src/lib/utils/shadcn/**` files are not modified.
+- No UI barrel exports were added.
 
 ## References
 

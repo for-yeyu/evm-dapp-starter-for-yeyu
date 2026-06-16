@@ -6,7 +6,7 @@ Goals:
 - Keep network request logic centralized in `src/api`.
 - Separate read/write behavior with `query` and `mutation`.
 - Keep request and response contracts explicit in `types`.
-- Re-export each domain through `index.ts` for predictable imports.
+- Import request functions and contracts from concrete files.
 
 ## Directory Layout
 
@@ -15,8 +15,7 @@ src/api/
   <domain>/
     mutation/              # Write/update requests and side-effect actions
     query/                 # Read/fetch requests
-    types/                 # API params and response types
-    index.ts               # Domain barrel export
+    types/                 # API params and response types in named files
 ```
 
 ## Responsibilities
@@ -31,10 +30,6 @@ src/api/
 
 ### `types/`
 - Shared API contracts used by `query`/`mutation` and callers.
-
-### `index.ts`
-- Re-export current domain APIs.
-- Keep import paths stable and concise.
 
 ## Request Rules
 
@@ -68,41 +63,36 @@ Disallowed in client components:
 
 ## Import Rules
 
-Prefer domain barrel imports:
+Do not create or use `index.ts` barrel exports in `src/api`.
+
+Use concrete file imports:
 
 ```ts
-import { getServerTime } from '@/api/time'
-import { transferToken, type TransferTokenParams } from '@/api/token'
-```
-
-Within one domain, use local barrel exports for consistency:
-
-```ts
-export * from './mutation'
-export * from './query'
-export * from './types'
+import { getServerTime } from '@/api/time/query/get-server-time'
+import { transferToken } from '@/api/token/mutation/transfer-token'
+import type { TransferTokenParams } from '@/api/token/types/transfer-token-params'
 ```
 
 ## How To Add A New API Domain
 
 1. Create `src/api/<domain>/query`, `mutation`, `types`.
 2. Add request functions under `query`/`mutation`.
-3. Define shared contracts in `types`.
-4. Add `index.ts` in each subfolder and in the domain root.
+3. Define shared contracts in named files under `types`.
+4. Import functions and contracts from concrete files.
 5. Use `apiRequest` for `src/app/api/**` endpoints.
 
 ## Design Principles
 
 1. Single request layer: all API calls live in `src/api`.
 2. Explicit intent: `query` and `mutation` are separated.
-3. Typed contracts: params and result types live in `types`.
-4. Stable exports: all modules expose barrel `index.ts`.
+3. Typed contracts: params and result types live in named files under `types`.
+4. Direct imports: callers import from concrete files instead of folder paths.
 5. Consistent transport: only the wrapped ky helper is allowed.
 
 ## Checklist For PRs
 
 - API functions are placed in `query` or `mutation` correctly.
-- Shared contracts are defined in `types`.
-- Domain and subfolders expose `index.ts`.
+- Shared contracts are defined in named files under `types`.
+- Imports point to concrete files instead of folder-level `index.ts` barrels.
 - `src/app/api/**` endpoints use `apiRequest`.
 - Client components consume API through hooks, not direct requests.

@@ -172,10 +172,12 @@ const cleanApiReadme = content => {
 }`,
     )
     .replace(
-      `import { getServerTime } from '@/api/time'
-import { transferToken, type TransferTokenParams } from '@/api/token'`,
-      `import { getProfile } from '@/api/profile'
-import { updateProfile, type UpdateProfileParams } from '@/api/profile'`,
+      `import { getServerTime } from '@/api/time/query/get-server-time'
+import { transferToken } from '@/api/token/mutation/transfer-token'
+import type { TransferTokenParams } from '@/api/token/types/transfer-token-params'`,
+      `import { getProfile } from '@/api/profile/query/get-profile'
+import { updateProfile } from '@/api/profile/mutation/update-profile'
+import type { UpdateProfileParams } from '@/api/profile/types/update-profile-params'`,
     )
 }
 
@@ -188,8 +190,8 @@ src/hooks/api/token/query/use-balance.ts`,
 src/hooks/api/profile/query/use-profile.ts`,
     )
     .replace(
-      "import { getServerTime } from '@/api/time'",
-      "import { getProfile } from '@/api/profile'",
+      "import { getServerTime } from '@/api/time/query/get-server-time'",
+      "import { getProfile } from '@/api/profile/query/get-profile'",
     )
     .replace('export function useServerTime() {', 'export function useProfile() {')
     .replace("    queryKey: ['server-time'],", "    queryKey: ['profile'],")

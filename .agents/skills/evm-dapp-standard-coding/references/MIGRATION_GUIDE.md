@@ -82,13 +82,15 @@ For an old page `legacy/<feature>`, always use this order:
 - Create `mutation/` only when write/side-effect functions exist
 - Move request logic out of page/service into `query` or `mutation`
 - Do not create empty folders or empty barrel exports
+- Import request functions and contracts from concrete files
 - Use `@/lib/http/ky` only:
   - `apiRequest` for Next route handlers
   - `httpRequest` for external endpoints
 
 4. Hook wrapper migration (`src/hooks/api`)
 - Mirror `src/api/<domain>`: create only the needed `query/` or `mutation/` folders
-- Keep `index.ts` exports only for folders that exist
+- Do not create or update `index.ts` barrel exports
+- Import hooks from concrete files
 - Wrap `src/api` with React Query:
   - `useQuery` for reads
   - `useMutation` for writes
@@ -192,7 +194,7 @@ A migrated business slice is complete only if all conditions are met:
 - Fix: move request to `src/api`, then expose via `src/hooks`.
 
 3. Failure: `src/api` structure does not match actual behavior (missing needed folder or extra empty folder)
-- Fix: keep `types` required, add only needed `query`/`mutation`, and update barrel exports for existing folders only.
+- Fix: keep `types` required, add only needed `query`/`mutation`, and import concrete files directly.
 
 4. Failure: secret config placed in `shared`
 - Fix: move to `src/configs/server` and add `server-only`.

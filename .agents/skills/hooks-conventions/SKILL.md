@@ -14,8 +14,9 @@ Applies to `src/hooks/**`.
 1. `src/hooks/api` mirrors `src/api` domains and subfolders.
 2. Query hooks live in `query/` and use `useQuery` (create this folder only when query hooks exist).
 3. Mutation hooks live in `mutation/` and use `useMutation` (create this folder only when mutation hooks exist).
-4. Hook-level helper types live in `types/` when needed.
-5. Use `index.ts` barrels for existing folders only; do not create empty folder/index exports.
+4. Hook-level helper types live in named files under `types/` when needed.
+5. Do not create or update `index.ts` barrel exports.
+6. Import hooks from concrete files, not folder paths.
 
 ## Hard Boundary Rule
 
@@ -37,14 +38,14 @@ Current base architecture does not provide non-API folder examples.
 2. Create corresponding hook in `src/hooks/api/<domain>/query|mutation`.
 3. Use stable `queryKey` design for queries.
 4. Add invalidation/update behavior for mutations.
-5. Export through local and domain `index.ts` for existing folders only.
+5. Update consumers to import from the concrete hook file.
 
 ## Review Checklist
 
 - Hook path mirrors API path.
 - Query and mutation hooks use proper React Query primitives.
 - No empty `query/` or `mutation/` folders were added.
-- `index.ts` barrels are updated only for existing folders.
+- No `index.ts` barrel exports or folder-level hook imports were added.
 - Client code consumes hooks instead of direct request calls.
 - Non-API hooks (if added) are categorized clearly.
 

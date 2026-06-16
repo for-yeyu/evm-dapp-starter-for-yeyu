@@ -1,6 +1,6 @@
 ---
 name: api-conventions
-description: Use when creating or updating src/api request functions, domain exports, query/mutation separation, and HTTP transport choices.
+description: Use when creating or updating src/api request functions, direct module imports, query/mutation separation, and HTTP transport choices.
 ---
 
 # API Conventions
@@ -18,16 +18,16 @@ src/api/<domain>/
   types/
   query/      # optional
   mutation/   # optional
-  index.ts
 ```
 
 Rules:
 
-1. `types/` is required.
+1. `types/` is required, with named files such as `get-server-time-result.ts`.
 2. Create `query/` only when read/fetch functions exist.
 3. Create `mutation/` only when write/side-effect functions exist.
-4. Do not create empty folders or empty `index.ts` exports just to satisfy a template.
-5. Use `index.ts` barrels only for folders that actually exist.
+4. Do not create empty folders just to satisfy a template.
+5. Do not create or update `index.ts` barrel exports.
+6. Import API functions and contracts from concrete files, not folder paths.
 
 ## Hard Request Rules
 
@@ -48,16 +48,16 @@ Required chain:
 ## Workflow
 
 1. Add function under `query/` or `mutation/` by behavior.
-2. Add/update shared contracts under `types/`.
-3. Export through local and domain `index.ts` for existing folders only.
+2. Add/update shared contracts under named files in `types/`.
+3. Update consumers to import from the concrete function/type file.
 4. Ensure transport helper choice is correct (`apiRequest` vs `httpRequest`).
 
 ## Review Checklist
 
 - Function is in correct `query` or `mutation` folder.
-- Shared contracts exist in `types`.
+- Shared contracts exist in named files under `types`.
 - No empty `query/` or `mutation/` folders were added.
-- `index.ts` barrels are updated only for existing folders.
+- No `index.ts` barrel exports or folder-level API imports were added.
 - `apiRequest` is used for Next route handlers; `httpRequest` for others.
 - No direct client-side API requests are introduced.
 

@@ -1,4 +1,4 @@
-import type { GetDecimalsParams } from '../types'
+import type { GetDecimalsParams } from '../types/get-decimals-params'
 import { readContract } from '@wagmi/core'
 import { erc20Abi } from 'viem'
 import { chainConfig } from '@/configs/chains'

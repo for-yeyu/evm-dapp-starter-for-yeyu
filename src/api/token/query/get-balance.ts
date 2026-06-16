@@ -1,8 +1,8 @@
-import type { GetBalanceParams } from '../types'
+import type { GetBalanceParams } from '../types/get-balance-params'
 import { readContract, getBalance as wagmiGetBalance } from '@wagmi/core'
 import { erc20Abi } from 'viem'
 import { wagmiConfig } from '@/lib/common/web3/wagmi'
-import { rawAmountToAmount } from '@/lib/utils/formatter'
+import { rawAmountToAmount } from '@/lib/utils/formatter/misc'
 
 export async function getBalance(params: GetBalanceParams): Promise<string> {
   if (params.address == null) {

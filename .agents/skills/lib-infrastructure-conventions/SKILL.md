@@ -22,6 +22,8 @@ Applies to `src/lib/**`.
 
 By default, only `src/lib/utils/**` and `src/lib/abis/**` should be modified.
 
+Do not modify `src/lib/utils/shadcn/**`; treat it as shadcn support code.
+
 For `src/lib/common/**`, `src/lib/http/**`, and `src/lib/runtime/**`:
 
 - Treat as foundational infrastructure.
@@ -34,6 +36,7 @@ For `src/lib/common/**`, `src/lib/http/**`, and `src/lib/runtime/**`:
 2. Next route handlers should use `withResponse` from `@/lib/http/next`.
 3. Shared errors should prefer `BaseError` hierarchy.
 4. Runtime initialization should go through `runtime/*` initializers.
+5. Do not add `index.ts` barrel exports; import utilities from concrete files when the utility file is not an existing implementation entry.
 
 ## Workflow
 
@@ -45,9 +48,11 @@ For `src/lib/common/**`, `src/lib/http/**`, and `src/lib/runtime/**`:
 ## Review Checklist
 
 - Edit location respects modification policy.
+- `src/lib/utils/shadcn/**` is unchanged.
 - Transport/error/response wiring stays consistent.
 - Infra-core changes (if any) are justified and scoped.
 - Utility changes include tests when regression risk exists.
+- No utility barrel exports were added.
 
 ## References
 

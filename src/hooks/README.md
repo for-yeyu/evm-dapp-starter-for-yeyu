@@ -6,6 +6,7 @@ Goals:
 - Keep all API-calling hooks in `src/hooks/api`.
 - Mirror `src/api` structure for fast lookup and maintenance.
 - Use React Query as the only API-calling mechanism in client components.
+- Import hooks from concrete files instead of barrel exports.
 
 ## Directory Layout
 
@@ -15,8 +16,7 @@ src/hooks/
     <domain>/
       mutation/            # useMutation hooks
       query/               # useQuery hooks
-      types/               # Hook-level types
-      index.ts             # Domain barrel export
+      types/               # Hook-level types in named files
 ```
 
 ## Responsibilities
@@ -31,7 +31,7 @@ src/hooks/
 
 ### `api/<domain>/query/`
 - `useQuery` hooks for read behavior.
-- Calls functions from `src/api/<domain>/query` (or domain barrel exports).
+- Calls functions from concrete files in `src/api/<domain>/query`.
 
 ### `api/<domain>/mutation/`
 - `useMutation` hooks for write behavior.
@@ -41,9 +41,6 @@ src/hooks/
 ### `api/<domain>/types/`
 - Hook-only types (for example, UI-friendly params).
 - Can derive from API types when useful.
-
-### `index.ts`
-- Re-export hooks per folder and per domain.
 
 ## Mapping Rule: `src/hooks/api` <-> `src/api`
 
@@ -75,21 +72,21 @@ Not allowed:
 2. Mutation hooks use `useMutation` and invalidate or update related queries when needed.
 3. Hook names use `use*` convention.
 4. Keep business request logic in `src/api`; hooks should focus on query lifecycle orchestration.
-5. Export through `index.ts` at folder and domain levels.
+5. Do not create or update `index.ts` barrel exports.
 
 ## How To Add A New API Hook
 
 1. Ensure API function exists in `src/api/<domain>/query` or `mutation`.
 2. Create corresponding hook in `src/hooks/api/<domain>/query` or `mutation`.
-3. Add hook exports to local `index.ts`, then domain `index.ts`.
-4. Define hook-only helper types in `src/hooks/api/<domain>/types` if needed.
+3. Define hook-only helper types in named files under `src/hooks/api/<domain>/types` if needed.
+4. Import the hook from its concrete file in client components.
 5. Use the hook in client components instead of calling API functions directly.
 
 Example:
 
 ```ts
 import { useQuery } from '@tanstack/react-query'
-import { getServerTime } from '@/api/time'
+import { getServerTime } from '@/api/time/query/get-server-time'
 
 export function useServerTime() {
   return useQuery({
@@ -107,13 +104,13 @@ export function useServerTime() {
 2. API modules remain transport-focused; hooks remain state/query-focused.
 3. Structure parity with `src/api` is mandatory.
 4. Query key design should be deterministic and domain-scoped.
-5. Re-export strategy should keep imports short and stable.
+5. Concrete imports keep module ownership explicit.
 
 ## Checklist For PRs
 
 - New API function has a corresponding hook when client usage is needed.
 - Hook path mirrors API path and domain.
 - Query hooks use `useQuery`; mutation hooks use `useMutation`.
-- Related `index.ts` barrel exports are updated.
+- Imports point to concrete hook files instead of folder-level `index.ts` barrels.
 - Client components call hooks instead of direct network requests.
 - Non-API hooks are organized by clear functional or business categories.

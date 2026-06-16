@@ -1,6 +1,7 @@
 import type { SkipToken } from '@tanstack/react-query'
+import type { GetSymbolParams } from '@/api/token/types/get-symbol-params'
 import { skipToken, useQuery } from '@tanstack/react-query'
-import { type GetSymbolParams, getSymbol } from '@/api/token'
+import { getSymbol } from '@/api/token/query/get-symbol'
 
 export function useSymbol(params: GetSymbolParams | SkipToken) {
   return useQuery({

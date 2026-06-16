@@ -1,6 +1,7 @@
+import type { TransferTokenParams } from '@/api/token/types/transfer-token-params'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { waitForTransactionReceipt } from '@wagmi/core'
-import { type TransferTokenParams, transferToken } from '@/api/token'
+import { transferToken } from '@/api/token/mutation/transfer-token'
 import { wagmiConfig } from '@/lib/common/web3/wagmi'
 
 export function useTokenTransfer() {

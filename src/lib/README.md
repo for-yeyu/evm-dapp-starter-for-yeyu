@@ -55,6 +55,8 @@ src/lib/
 
 By default, only `utils/` and `abis/` (abi-related assets) should be modified in normal feature work.
 
+Do not modify `src/lib/utils/shadcn/**`; treat it as shadcn support code.
+
 For other directories (`common/`, `http/`, `runtime/`):
 - Treat them as foundational infrastructure.
 - Do not modify unless there is a clear new business requirement that must change global behavior.
@@ -67,13 +69,14 @@ For other directories (`common/`, `http/`, `runtime/`):
 3. Client API state should use the shared `queryClient` from `@/lib/http/react-query`.
 4. Global runtime bootstrapping should be done through `runtime/` initializer functions.
 5. Shared errors should prefer extending `BaseError` for consistent handling and transport.
+6. Utilities should avoid `index.ts` barrel exports. Existing `index.ts` files that contain real implementation code are not barrel exports.
 
 ## How To Add New Code In `lib`
 
 ### Add a utility (preferred common change)
 
 1. Add module under `src/lib/utils/<group>/`.
-2. Export from that group `index.ts` when applicable.
+2. Import utilities from concrete files.
 3. Add/update tests if logic is non-trivial (see `formatter/*.test.ts` pattern).
 4. Use from upper layers (`api`, `hooks`, `ui`) through explicit imports.
 
@@ -100,7 +103,9 @@ For other directories (`common/`, `http/`, `runtime/`):
 ## Checklist For PRs
 
 - Change is in `utils/` or `abis/` unless justified by new infra-level requirements.
+- `src/lib/utils/shadcn/**` is unchanged.
 - Request logic uses `apiRequest`, not ad-hoc transport code.
 - Route handlers use `withResponse` for response consistency.
 - Shared errors use `BaseError` hierarchy when appropriate.
 - Utility changes include tests when behavior is complex or easy to regress.
+- No utility barrel exports are introduced.

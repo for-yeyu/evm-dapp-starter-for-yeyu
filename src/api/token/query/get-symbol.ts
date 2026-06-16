@@ -1,10 +1,10 @@
-import type { GetDecimalsParams } from '../types'
+import type { GetSymbolParams } from '../types/get-symbol-params'
 import { readContract } from '@wagmi/core'
 import { erc20Abi } from 'viem'
 import { chainConfig } from '@/configs/chains'
 import { wagmiConfig } from '@/lib/common/web3/wagmi'
 
-export async function getSymbol(params: GetDecimalsParams): Promise<string> {
+export async function getSymbol(params: GetSymbolParams): Promise<string> {
   if (params.address == null) {
     return chainConfig.chains[params.chainId].nativeCurrency.symbol
   }

@@ -36,7 +36,7 @@ src/ui/
 
 ### `components/providers/`
 - Stores providers and global handlers.
-- If more provider categories are needed later, create subdirectories and re-export from `index.ts`.
+- If more provider categories are needed later, create subdirectories with concrete component files.
 
 ### `components/shared/`
 - Stores normal reusable components when no stricter category is needed.
@@ -46,7 +46,9 @@ src/ui/
 
 ### `shadcn/`
 - Stores installed shadcn UI components.
-- Usually treat these as vendor-like primitives and avoid direct modification unless necessary.
+- Treat these as generated/vendor-like primitives and do not modify files in this directory.
+
+`src/lib/utils/shadcn/**` also supports shadcn primitives and should not be modified.
 
 ### `svgs/`
 - Stores SVG-based components.
@@ -80,6 +82,7 @@ Rules:
 - Except components in `svgs/`, do not pass or consume `props` and `className` by default.
 - For non-`svgs/` components, keep the function parameter empty unless there is a clear project-level reason.
 - If custom `props` or `className` behavior is needed, users should implement it explicitly in their own application layer.
+- Do not create `index.ts` barrel exports for UI modules.
 
 ## How To Add A New Page UI Module
 
@@ -104,4 +107,5 @@ Rules:
 - Child component filenames follow kebab-case.
 - Non-`svgs/` components do not introduce `props` or `className` by default.
 - Shared or global concerns are placed in `components/providers` or `components/shared`.
-- `shadcn` files are changed only when there is a clear reason.
+- `src/ui/shadcn/**` and `src/lib/utils/shadcn/**` files are not modified.
+- No UI barrel exports are added.

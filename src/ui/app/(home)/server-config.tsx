@@ -1,7 +1,7 @@
 'use client'
 
 import type { ComponentProps, FC } from 'react'
-import { useServerConfigs } from '@/hooks/api/configs/query'
+import { useServerConfigs } from '@/hooks/api/configs/query/use-server-configs'
 import { cn } from '@/lib/utils/shadcn'
 import { Button } from '@/ui/shadcn/button'
 
