@@ -21,7 +21,11 @@ export abstract class BaseError extends Error {
   walk(fn?: (error: Error) => boolean): Error | null {
     let current: Error | null = this
     while (current instanceof Error) {
-      if ((fn != null && fn(current)) || (fn == null && !(current.cause instanceof Error))) {
+      if (fn == null) {
+        if (!(current.cause instanceof Error)) {
+          return current
+        }
+      } else if (fn(current)) {
         return current
       }
       current = current.cause instanceof Error ? current.cause : null

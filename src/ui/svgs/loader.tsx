@@ -12,6 +12,8 @@ export const Loader: FC<ComponentProps<'svg'>> = props => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-label="Loading"
+      role="img"
       {...props}
     >
       <path d="M21 12a9 9 0 1 1-6.219-8.56" />

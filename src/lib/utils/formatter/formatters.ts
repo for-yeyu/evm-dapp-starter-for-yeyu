@@ -100,17 +100,19 @@ export function formatNumber(
       }
       let exponent = groupSymbols.length * 3
       if (bn.gte(10 ** groupSize) || bn.lte(-(10 ** groupSize))) {
-        const e = bn.e!
-        bn = bn.shiftedBy(-e)
-        exponent += e
-        roundToDecimals()
-
-        if (bn.gte(10) || bn.lte(-10)) {
-          bn = bn.shiftedBy(-1)
-          exponent += 1
+        const e = bn.e
+        if (e != null) {
+          bn = bn.shiftedBy(-e)
+          exponent += e
           roundToDecimals()
+
+          if (bn.gte(10) || bn.lte(-10)) {
+            bn = bn.shiftedBy(-1)
+            exponent += 1
+            roundToDecimals()
+          }
+          compactSuffix = `e${exponent}`
         }
-        compactSuffix = `e${exponent}`
       }
     }
   }
