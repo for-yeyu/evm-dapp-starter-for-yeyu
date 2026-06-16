@@ -16,7 +16,7 @@
     "commit": "czg",
     "qwer": "czg",
     "doctor": "pnpm dlx react-doctor@latest -y",
-    "cleanup": "node scripts/remove-examples.mjs"
+    "cleanup": "node scripts/remove-example-code.mjs"
   },
   "dependencies": {
     "@cfx-kit/wallet-avatar": "^0.0.5",
