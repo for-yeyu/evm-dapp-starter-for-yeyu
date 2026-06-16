@@ -17,7 +17,7 @@ src/lib/
     web3/                  # Wagmi config and global EVM state store
   http/                    # HTTP, Next route response, React Query client wrappers
   runtime/                 # Global store/runtime initializers
-  utils/                   # Pure utility helpers (formatter/json/shadcn helpers)
+  utils/                   # Pure utility helpers (formatter/shadcn helpers)
 ```
 
 ## Responsibilities
@@ -27,7 +27,7 @@ src/lib/
 - Use this folder when adding/updating contract interface files.
 
 ### `common/errors/`
-- Defines base error model (`BaseError`) and typed errors (request/EVM/internal).
+- Defines base error model (`BaseError`) and typed errors (request/EVM).
 - Provides global `errorStore` for unified client-side error handling.
 - `BaseError.needFix` is used by HTTP response wrappers to distinguish fix-needed errors.
 
@@ -37,7 +37,7 @@ src/lib/
 - Converts third-party wagmi/viem errors to project-level error classes.
 
 ### `http/`
-- `ky.ts`: wrapped request helpers (`httpRequest`, `apiRequest`) with unified error conversion.
+- `ky.ts`: wrapped `apiRequest` helper with unified error conversion.
 - `next.ts`: `withResponse` wrapper for Next.js route handlers (`src/app/api/**`).
 - `react-query.ts`: project-level `queryClient` and query error bridge to `errorStore`.
 
@@ -49,7 +49,6 @@ src/lib/
 - Stores reusable pure utilities.
 - Current groups:
   - `formatter/`: number/time/text and token amount formatting helpers (with tests).
-  - `json/`: safe serialize/deserialize helpers.
   - `shadcn/`: `cn` helper for class composition and tailwind conflict merge.
 
 ## Modification Policy (Important)
@@ -101,7 +100,7 @@ For other directories (`common/`, `http/`, `runtime/`):
 ## Checklist For PRs
 
 - Change is in `utils/` or `abis/` unless justified by new infra-level requirements.
-- Request logic uses `httpRequest` / `apiRequest`, not ad-hoc transport code.
+- Request logic uses `apiRequest`, not ad-hoc transport code.
 - Route handlers use `withResponse` for response consistency.
 - Shared errors use `BaseError` hierarchy when appropriate.
 - Utility changes include tests when behavior is complex or easy to regress.

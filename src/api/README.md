@@ -38,11 +38,10 @@ src/api/
 
 ## Request Rules
 
-All request functions in `src/api` must use wrapped functions from `@/lib/http/ky`.
+All request functions in `src/api` must use the wrapped `apiRequest` function from `@/lib/http/ky`.
 
-1. If the target endpoint is under Next.js route handlers (`src/app/api/**`), use `apiRequest`.
-2. If the target endpoint is not from `src/app/api/**` (for example external services), use `httpRequest`.
-3. Do not use direct `fetch`, raw `ky`, or other ad-hoc request approaches inside `src/api`.
+1. Use `apiRequest` for Next.js route handlers under `src/app/api/**`.
+2. Do not use direct `fetch`, raw `ky`, or other ad-hoc request approaches inside `src/api`.
 
 Examples:
 
@@ -54,14 +53,6 @@ export async function getServerTime(): Promise<number> {
 }
 ```
 
-```ts
-import { httpRequest } from '@/lib/http/ky'
-
-export async function getRemoteData(): Promise<unknown> {
-  return await httpRequest<unknown>({ url: 'https://example.com/data' })
-}
-```
-
 ## Client Boundary
 
 Client page components must not request server APIs directly.
@@ -69,7 +60,7 @@ Client page components must not request server APIs directly.
 Allowed flow:
 1. Component uses hook from `src/hooks`.
 2. Hook calls function from `src/api`.
-3. API function performs request through `apiRequest` or `httpRequest`.
+3. API function performs request through `apiRequest`.
 
 Disallowed in client components:
 - Directly calling request methods (`fetch`, `ky`, etc.).
@@ -98,7 +89,7 @@ export * from './types'
 2. Add request functions under `query`/`mutation`.
 3. Define shared contracts in `types`.
 4. Add `index.ts` in each subfolder and in the domain root.
-5. Use `apiRequest` for `src/app/api/**` endpoints, otherwise `httpRequest`.
+5. Use `apiRequest` for `src/app/api/**` endpoints.
 
 ## Design Principles
 
@@ -106,7 +97,7 @@ export * from './types'
 2. Explicit intent: `query` and `mutation` are separated.
 3. Typed contracts: params and result types live in `types`.
 4. Stable exports: all modules expose barrel `index.ts`.
-5. Consistent transport: only wrapped ky helpers are allowed.
+5. Consistent transport: only the wrapped ky helper is allowed.
 
 ## Checklist For PRs
 
@@ -114,5 +105,4 @@ export * from './types'
 - Shared contracts are defined in `types`.
 - Domain and subfolders expose `index.ts`.
 - `src/app/api/**` endpoints use `apiRequest`.
-- Non-`src/app/api/**` endpoints use `httpRequest`.
 - Client components consume API through hooks, not direct requests.

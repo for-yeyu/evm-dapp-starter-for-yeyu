@@ -33,3 +33,7 @@ pnpm-debug.log*
 /backup
 
 refer
+
+# pnpm
+.pnpm
+.pnpm-store

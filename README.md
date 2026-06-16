@@ -40,9 +40,7 @@ src/
 1. Client page components must not call network requests directly.
 2. Client pages/components call hooks in `src/hooks`.
 3. Hooks call request functions in `src/api`.
-4. `src/api` uses wrapped ky request helpers only:
-   - `apiRequest` for `src/app/api/**` endpoints
-   - `httpRequest` for non-`src/app/api/**` endpoints
+4. `src/api` uses the wrapped `apiRequest` ky helper only.
 5. `src/app` should stay minimal and route-focused; page implementation lives in `src/ui/app`.
 
 ## Documentation Index

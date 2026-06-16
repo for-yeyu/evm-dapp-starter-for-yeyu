@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { format, formatDistanceToNowStrict, toDate } from 'date-fns'
+import { format, toDate } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import UString from 'uni-string'
 
@@ -210,18 +210,4 @@ export function formatTime(
         ? "MMM dd yyyy HH:mm:ss a 'UTC'"
         : "MMM dd yyyy HH:mm:ss a xxx 'UTC'",
   )
-}
-
-export type FormatTimeFromNowOptions = {
-  useSuffix?: boolean
-}
-
-export function formatTimeFromNow(
-  time: string | number | null | undefined,
-  { useSuffix = true }: FormatTimeFromNowOptions = {},
-): string {
-  if (time == null) {
-    return '-'
-  }
-  return formatDistanceToNowStrict(toDate(time), { addSuffix: useSuffix })
 }

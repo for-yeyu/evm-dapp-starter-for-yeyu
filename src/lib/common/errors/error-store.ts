@@ -1,4 +1,3 @@
-import { useStore } from 'zustand'
 import { createStore } from 'zustand/vanilla'
 import { convertMaybeEvmError } from '../web3/wagmi'
 
@@ -14,7 +13,3 @@ export const errorStore = createStore<ErrorStoreState>()(set => ({
       lastError: error == null ? null : convertMaybeEvmError(error),
     }),
 }))
-
-export function useErrorStore<T>(selector: (state: ErrorStoreState) => T): T {
-  return useStore(errorStore, selector)
-}
