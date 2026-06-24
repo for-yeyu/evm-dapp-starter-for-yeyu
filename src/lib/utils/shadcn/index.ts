@@ -1,17 +1,5 @@
-import type { ClassValue } from 'class-variance-authority/types'
-import type { DefaultClassGroupIds } from 'tailwind-merge'
-import { cx } from 'class-variance-authority'
-import { extendTailwindMerge } from 'tailwind-merge'
+import { type ClassValue, clsx, twMerge } from 'cnfast'
 
-const tailwindMerge = extendTailwindMerge({
-  extend: {
-    conflictingClassGroups: {
-      ['arbitrary..text-align' as DefaultClassGroupIds]: ['text-alignment'],
-      'text-alignment': ['arbitrary..text-align' as DefaultClassGroupIds],
-    },
-  },
-})
-
-export function cn(...inputs: ClassValue[]) {
-  return tailwindMerge(cx(inputs))
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs))
 }
