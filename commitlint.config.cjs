@@ -1,9 +1,17 @@
-/** @type {import('cz-git').UserConfig} */
-
 // TODO: open ai https://cz-git.qbb.sh/recipes/openai
-https: module.exports = {
+const emojiHeaderPattern =
+  /^(\p{Extended_Pictographic}(?:\uFE0F)?(?:\u200D\p{Extended_Pictographic}(?:\uFE0F)?)*)\s(\w+)(?:\(([^)]*)\))?(!)?:\s(.+)$/u
+
+/** @type {import('cz-git').UserConfig} */
+module.exports = {
   // ignores: [commit => commit.includes("init")],
   extends: ['@commitlint/config-conventional'],
+  parserPreset: {
+    parserOpts: {
+      headerPattern: emojiHeaderPattern,
+      headerCorrespondence: ['emoji', 'type', 'scope', 'breaking', 'subject'],
+    },
+  },
   rules: {
     'body-leading-blank': [2, 'always'],
     'footer-leading-blank': [1, 'always'],
@@ -60,57 +68,57 @@ https: module.exports = {
     types: [
       {
         value: 'feat',
-        name: 'feat:     😋  A new feature',
+        name: '😋 feat:     A new feature',
         emoji: '😋',
       },
       {
         value: 'fix',
-        name: 'fix:      🐛  A bug fix',
+        name: '🐛 fix:      A bug fix',
         emoji: '🐛',
       },
       {
         value: 'docs',
-        name: 'docs:     📗  Documentation only changes',
+        name: '📗 docs:     Documentation only changes',
         emoji: '📗',
       },
       {
         value: 'style',
-        name: 'style:    🎨  Changes that do not affect the meaning of the code',
+        name: '🎨 style:    Changes that do not affect the meaning of the code',
         emoji: '🎨',
       },
       {
         value: 'refactor',
-        name: 'refactor: 🥹  A code change that neither fixes a bug nor adds a feature',
+        name: '🥹 refactor: A code change that neither fixes a bug nor adds a feature',
         emoji: '🥹',
       },
       {
         value: 'perf',
-        name: 'perf:     ⚡️  A code change that improves performance',
+        name: '⚡️ perf:     A code change that improves performance',
         emoji: '⚡️',
       },
       {
         value: 'test',
-        name: 'test:     🧪  Adding missing tests or correcting existing tests',
+        name: '🧪 test:     Adding missing tests or correcting existing tests',
         emoji: '🧪',
       },
       {
         value: 'build',
-        name: 'build:    📦️  Changes that affect the build system or external dependencies',
+        name: '📦️ build:    Changes that affect the build system or external dependencies',
         emoji: '📦️',
       },
       {
         value: 'ci',
-        name: 'ci:       🎡  Changes to our CI configuration files and scripts',
+        name: '🎡 ci:       Changes to our CI configuration files and scripts',
         emoji: '🎡',
       },
       {
         value: 'chore',
-        name: "chore:    🪛  Other changes that don't modify src or test files",
+        name: "🪛 chore:    Other changes that don't modify src or test files",
         emoji: '🪛',
       },
       {
         value: 'revert',
-        name: 'revert:   ↩️  Reverts a previous commit',
+        name: '↩️ revert:   Reverts a previous commit',
         emoji: '↩️',
       },
       // 中文版
@@ -127,6 +135,7 @@ https: module.exports = {
       // { value: "其他", name: "其他:   🪛  对构建过程或辅助工具和库的更改（不影响源文件、测试用例）", emoji: "🪛" }
     ],
     useEmoji: true,
+    emojiAlign: 'left',
     themeColorCode: '',
     scopes: [],
     allowCustomScopes: true,

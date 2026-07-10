@@ -1,6 +1,6 @@
 ---
 name: api-conventions
-description: Use when creating or updating src/api request functions, direct module imports, query/mutation separation, and HTTP transport choices.
+description: Use when creating or updating src/api request functions, contracts, direct module imports, query/mutation separation, and HTTP transport choices; combine with app-router-conventions for local src/app/api endpoints.
 ---
 
 # API Conventions
@@ -51,6 +51,7 @@ Required chain:
 2. Add/update shared contracts under named files in `types/`.
 3. Update consumers to import from the concrete function/type file.
 4. Ensure transport helper choice is correct (`apiRequest` vs `httpRequest`).
+5. If the target is a new local Next route handler, apply `app-router-conventions` too.
 
 ## Review Checklist
 

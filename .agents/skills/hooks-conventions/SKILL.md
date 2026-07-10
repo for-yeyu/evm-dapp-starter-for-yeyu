@@ -1,6 +1,6 @@
 ---
 name: hooks-conventions
-description: Use when building src/hooks hooks, especially src/hooks/api React Query wrappers mapped to src/api domains.
+description: Use when building src/hooks hooks, especially src/hooks/api React Query wrappers mapped to src/api domains, including queryKey design, enabled/refetch behavior, mutation invalidation, cache updates, and hook responsibility boundaries.
 ---
 
 # Hooks Conventions
@@ -32,6 +32,14 @@ Not allowed:
 Other hooks should be grouped by function/business categories under `src/hooks`.
 Current base architecture does not provide non-API folder examples.
 
+## Hook Shape Rules
+
+1. Keep each hook focused on one responsibility.
+2. Do not return a large bag of unrelated functions and state from one hook.
+3. Split a broad hook into smaller hooks before it becomes a page-level controller.
+4. Return only the state and actions the caller needs.
+5. Use a Zustand store when multiple distant components need shared app state.
+
 ## Workflow
 
 1. Confirm API function exists in `src/api/<domain>/query|mutation`.
@@ -40,14 +48,35 @@ Current base architecture does not provide non-API folder examples.
 4. Add invalidation/update behavior for mutations.
 5. Update consumers to import from the concrete hook file.
 
+## React Query Rules
+
+1. Use array query keys.
+2. Start query keys with the domain name.
+3. Add resource/action segments after the domain.
+4. Put params in the final segment as a plain serializable object when params are needed.
+5. Do not include functions, class instances, Dates, or unstable objects in query keys.
+6. Query hooks call exactly one request function from `src/api` unless composition is explicitly required.
+7. Use `enabled` for user-triggered or dependency-gated queries.
+8. Mutations should invalidate or update affected query keys after success.
+
+Examples:
+
+```ts
+queryKey: ['time', 'server']
+queryKey: ['token', 'balance', { address }]
+```
+
 ## Review Checklist
 
 - Hook path mirrors API path.
 - Query and mutation hooks use proper React Query primitives.
+- Query keys are stable, serializable, and domain-first.
+- Mutations update or invalidate the affected cache.
 - No empty `query/` or `mutation/` folders were added.
 - No `index.ts` barrel exports or folder-level hook imports were added.
 - Client code consumes hooks instead of direct request calls.
 - Non-API hooks (if added) are categorized clearly.
+- Hooks expose focused state/actions instead of large unrelated return objects.
 
 ## References
 

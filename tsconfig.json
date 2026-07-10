@@ -23,7 +23,7 @@
     "target": "es2020",
     "types": ["vitest/globals"]
   },
-  "exclude": ["node_modules", "refer"],
+  "exclude": ["node_modules", "refer", "rerfer"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
