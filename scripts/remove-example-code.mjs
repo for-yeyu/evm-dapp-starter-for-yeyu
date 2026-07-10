@@ -13,6 +13,8 @@ const targetPaths = [
   'src/hooks/api/token',
   'src/hooks/api/configs',
   'src/ui/app/(home)/server-config.tsx',
+  'src/configs/test/server.test.ts',
+  'src/configs/validator/test/server.test.ts',
 ]
 
 const envFilePaths = [

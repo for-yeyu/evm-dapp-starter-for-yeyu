@@ -86,6 +86,15 @@ Example:
 git commit -m "🪛 chore: update agent skill conventions"
 ```
 
+## Testing
+
+1. Use Vitest for function and API tests.
+2. Place tests in a `test/` directory nested under the source module directory.
+3. Match the source basename and append `.test.ts`.
+4. Keep tests focused on observable behavior and public contracts.
+5. Do not add UI, browser, or `jsdom` tests unless the task explicitly requires them.
+6. Mock external dependencies at the narrowest transport or infrastructure boundary.
+
 ## Review Checklist
 
 - Constants use lower camelCase.
@@ -95,4 +104,4 @@ git commit -m "🪛 chore: update agent skill conventions"
 - Components and hooks stay focused instead of becoming broad controllers.
 - App stores use Zustand instead of React Context.
 - No restricted command or dependency install was run.
-
+- Function and API tests follow colocated `test/` directory rules.

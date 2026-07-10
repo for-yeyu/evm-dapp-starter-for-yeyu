@@ -71,13 +71,29 @@ For other directories (`common/`, `http/`, `runtime/`):
 5. Shared errors should prefer extending `BaseError` for consistent handling and transport.
 6. Utilities should avoid `index.ts` barrel exports. Existing `index.ts` files that contain real implementation code are not barrel exports.
 
+## Testing
+
+Test infrastructure and pure utility behavior without a browser environment. Keep the test beside
+the source module:
+
+```text
+src/lib/utils/formatter/
+  formatters.ts
+  test/
+    formatters.test.ts
+```
+
+Prioritize observable behavior for formatters, error classes, HTTP wrappers, and response helpers.
+Mock network transport at `ky` or the project request-wrapper boundary. Keep foundational
+infrastructure tests focused and avoid coupling them to internal local variables.
+
 ## How To Add New Code In `lib`
 
 ### Add a utility (preferred common change)
 
 1. Add module under `src/lib/utils/<group>/`.
 2. Import utilities from concrete files.
-3. Add/update tests if logic is non-trivial (see `formatter/*.test.ts` pattern).
+3. Add/update tests if logic is non-trivial (see `formatter/test/*.test.ts` pattern).
 4. Use from upper layers (`api`, `hooks`, `ui`) through explicit imports.
 
 ### Add or update ABI
@@ -109,3 +125,4 @@ For other directories (`common/`, `http/`, `runtime/`):
 - Shared errors use `BaseError` hierarchy when appropriate.
 - Utility changes include tests when behavior is complex or easy to regress.
 - No utility barrel exports are introduced.
+- Non-trivial utility and infrastructure behavior has a colocated `.test.ts` file when coverage is needed.

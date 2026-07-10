@@ -94,6 +94,27 @@ export const serverConfig = {
 }
 ```
 
+## Testing
+
+Environment validators are tested as plain functions in the same module directory:
+
+```text
+src/configs/validator/
+  app.ts
+  environment.ts
+  wallet.ts
+  server.ts
+  test/
+    app.test.ts
+    environment.test.ts
+    wallet.test.ts
+    server.test.ts
+```
+
+Cover valid values and each meaningful validation boundary, including missing, blank, and invalid
+environment values. Isolate environment changes between tests and assert validation errors through
+the validator's public behavior.
+
 ## Checklist For PRs
 
 - Zod imports stay in `src/configs/validator/**`.
@@ -102,3 +123,4 @@ export const serverConfig = {
 - Public env values use `NEXT_PUBLIC_*`.
 - Secrets are exported only from `serverConfig`.
 - Client components never import `@/configs/server`.
+- Validator tests are colocated under `src/configs/validator/test`.

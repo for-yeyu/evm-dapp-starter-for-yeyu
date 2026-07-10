@@ -10,7 +10,7 @@ async function httpRequest<T = unknown>(params: HttpRequestParams): Promise<T> {
   try {
     const { url, ...rest } = params
     const response = await ky(url ?? '', { retry: 0, timeout: 30_000, ...rest })
-    return response.json()
+    return await response.json()
   } catch (error) {
     if (error instanceof KyTimeoutError) {
       throw new TimeoutError(undefined, { cause: error })

@@ -12,7 +12,7 @@ export type FormatNumberOptions = {
   upperLimit?: number | string | null
   precision?: number | null
   decimals?: number | null
-  roundingMode?: 'up' | 'down' | 'half-up'
+  roundingMode?: 'up' | 'down' | 'half-up' | null
   useGroupSeparator?: boolean
   trimTrailingZero?: boolean
   defaultText?: string
@@ -100,30 +100,26 @@ export function formatNumber(
       }
       let exponent = groupSymbols.length * 3
       if (bn.gte(10 ** groupSize) || bn.lte(-(10 ** groupSize))) {
-        const e = bn.e
-        if (e != null) {
-          bn = bn.shiftedBy(-e)
-          exponent += e
-          roundToDecimals()
+        const e = bn.e!
+        bn = bn.shiftedBy(-e)
+        exponent += e
+        roundToDecimals()
 
-          if (bn.gte(10) || bn.lte(-10)) {
-            bn = bn.shiftedBy(-1)
-            exponent += 1
-            roundToDecimals()
-          }
-          compactSuffix = `e${exponent}`
+        if (bn.gte(10) || bn.lte(-10)) {
+          bn = bn.shiftedBy(-1)
+          exponent += 1
+          roundToDecimals()
         }
+        compactSuffix = `e${exponent}`
       }
     }
   }
 
   let percent = ''
   if (type === 'percent') {
-    if (!bn.isNaN()) {
-      bn = bn.times(100)
-      roundToDecimals()
-      percent = '%'
-    }
+    bn = bn.times(100)
+    roundToDecimals()
+    percent = '%'
   }
 
   const approx = useLimitValue ? compareSymbol : forceApproxSymbol ? '~' : ''

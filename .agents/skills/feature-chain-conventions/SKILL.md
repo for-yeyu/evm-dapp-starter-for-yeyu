@@ -46,6 +46,7 @@ src/app/<route>/page.tsx
 - Shared utility, error, HTTP, runtime, or web3 changes: use `lib-infrastructure-conventions`.
 - Global CSS or fonts: use `styles-conventions`.
 - Code shape, naming, className extraction, local type decisions, component props boundaries, hook shape, Zustand store decisions, dependency changes, scripts, and commit-message requests: use `project-workflow-conventions`.
+- Function and API tests: use `testing-conventions`; also load the source layer skill when the tested module belongs to `src/api`, `src/app`, `src/configs`, or `src/lib`.
 
 ## Workflow
 
@@ -64,4 +65,3 @@ src/app/<route>/page.tsx
 - Components, hooks, and stores stay split by responsibility.
 - Server route handlers use the project response/error conventions.
 - Cross-layer changes are intentional and scoped.
-

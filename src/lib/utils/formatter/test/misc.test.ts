@@ -1,4 +1,4 @@
-import { amountToRawAmount, notNullish, rawAmountToAmount } from './misc'
+import { amountToRawAmount, notNullish, rawAmountToAmount } from '../misc'
 
 describe('rawAmountToAmount', () => {
   test('converts raw amount with decimals', () => {
