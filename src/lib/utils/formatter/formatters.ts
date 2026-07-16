@@ -99,8 +99,8 @@ export function formatNumber(
         }
       }
       let exponent = groupSymbols.length * 3
-      if (bn.gte(10 ** groupSize) || bn.lte(-(10 ** groupSize))) {
-        const e = bn.e!
+      if ((bn.gte(10 ** groupSize) || bn.lte(-(10 ** groupSize))) && bn.e != null) {
+        const e = bn.e
         bn = bn.shiftedBy(-e)
         exponent += e
         roundToDecimals()
