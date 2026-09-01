@@ -42,7 +42,7 @@
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
     "uni-string": "^2.0.7",
-    "viem": "^2.55.18",
+    "viem": "^2.56.0",
     "wagmi": "^3.7.6",
     "zod": "^4.4.3",
     "zustand": "^5.0.15"
