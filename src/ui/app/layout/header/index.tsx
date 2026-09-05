@@ -6,7 +6,6 @@ import { appConfig } from '@/configs/app'
 import { cn } from '@/lib/utils/shadcn'
 import { Connect } from './connect'
 import { SwitchChain } from './switch-chain'
-import { SwitchTheme } from './switch-theme'
 
 export const Header: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
   return (
@@ -22,7 +21,6 @@ export const Header: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
         <div className="flex gap-4">
           <SwitchChain />
           <Connect />
-          <SwitchTheme />
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@
 import type { FC, ReactNode } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { useEffect } from 'react'
 import { WagmiProvider } from 'wagmi'
 import { wagmiConfig } from '@/lib/common/web3/wagmi'
@@ -20,13 +19,11 @@ export const Providers: FC<{ children: ReactNode }> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
       <WagmiProvider config={wagmiConfig}>
-        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-          <RainbowKitProvider>
-            <Toaster />
-            <ErrorHandler />
-            {children}
-          </RainbowKitProvider>
-        </NextThemesProvider>
+        <RainbowKitProvider>
+          <Toaster />
+          <ErrorHandler />
+          {children}
+        </RainbowKitProvider>
       </WagmiProvider>
     </QueryClientProvider>
   )

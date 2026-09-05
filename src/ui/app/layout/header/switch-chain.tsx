@@ -18,22 +18,15 @@ export const SwitchChain: FC<ComponentProps<'div'>> = ({ className, ...props }) 
   const chainId = useEvmStore(state => state.chainId)
 
   const connectorChainId = useEvmStore(state => state.connectorChainId)
+  const isWrongNetwork = connectorChainId != null && connectorChainId !== chainId
 
   return (
     <div className={cn('inline-block', className)} {...props}>
       <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            connectorChainId != null && connectorChainId !== chainId ? (
-              <Button variant="destructive" />
-            ) : (
-              <Button variant="outline" />
-            )
-          }
-        >
-          {connectorChainId != null && connectorChainId !== chainId
-            ? 'Wrong network'
-            : chainConfig.chains[chainId].name}
+        <DropdownMenuTrigger asChild>
+          <Button variant={isWrongNetwork ? 'destructive' : 'outline'}>
+            {isWrongNetwork ? 'Wrong network' : chainConfig.chains[chainId].name}
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           {chainConfig.supportedChainIds.map(chainId => (
