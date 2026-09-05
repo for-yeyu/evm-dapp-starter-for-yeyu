@@ -10,6 +10,9 @@ Goals:
 
 ## Directory Layout
 
+The template includes this guide only. The following layout is created when a feature needs an API
+domain; `profile` snippets below are documentation examples, not shipped endpoints.
+
 ```text
 src/api/
   <domain>/
@@ -22,7 +25,7 @@ src/api/
 
 ### `query/`
 - Read-only request functions.
-- Typical usage: fetch list/detail/time/config data.
+- Typical usage: fetch list or detail data.
 
 ### `mutation/`
 - Write/update request functions.
@@ -39,15 +42,38 @@ All request functions in `src/api` must use wrapped request helpers from `@/lib/
 2. Use `httpRequest` for external endpoints.
 3. Do not use direct `fetch`, raw `ky`, or other ad-hoc request approaches inside `src/api`.
 
-Examples:
+Example contract in `src/api/profile/types/get-profile-result.ts`:
 
 ```ts
-import { apiRequest } from '@/lib/http/ky'
-
-export async function getServerTime(): Promise<number> {
-  return await apiRequest<number>({ url: 'time' })
+export type GetProfileResult = {
+  displayName: string
 }
 ```
+
+Example request in `src/api/profile/query/get-profile.ts`:
+
+```ts
+import type { GetProfileResult } from '@/api/profile/types/get-profile-result'
+import { apiRequest } from '@/lib/http/ky'
+
+export async function getProfile(): Promise<GetProfileResult> {
+  return await apiRequest<GetProfileResult>({ url: 'profile' })
+}
+```
+
+The matching illustrative `src/app/api/profile/route.ts` uses the shared response wrapper:
+
+```ts
+import type { GetProfileResult } from '@/api/profile/types/get-profile-result'
+import { withResponse } from '@/lib/http/next'
+
+export const GET = withResponse((): GetProfileResult => {
+  return { displayName: 'Example user' }
+})
+```
+
+In a real feature, read application data instead of returning the example value. Return an explicit
+public response shape; never serialize `serverConfig` or server-only secrets into an API response.
 
 ## Client Boundary
 
@@ -69,14 +95,13 @@ Do not create or use `index.ts` barrel exports in `src/api`.
 Use concrete file imports:
 
 ```ts
-import { getServerTime } from '@/api/time/query/get-server-time'
-import { transferToken } from '@/api/token/mutation/transfer-token'
-import type { TransferTokenParams } from '@/api/token/types/transfer-token-params'
+import type { GetProfileResult } from '@/api/profile/types/get-profile-result'
+import { getProfile } from '@/api/profile/query/get-profile'
 ```
 
 ## How To Add A New API Domain
 
-1. Create `src/api/<domain>/query`, `mutation`, `types`.
+1. Create `src/api/<domain>/types` and only the `query` or `mutation` folders the feature needs.
 2. Add request functions under `query`/`mutation`.
 3. Define shared contracts in named files under `types`.
 4. Import functions and contracts from concrete files.
@@ -89,10 +114,10 @@ API request functions are tested without rendering UI or starting a server.
 Place the test next to the request function:
 
 ```text
-src/api/time/query/
-  get-server-time.ts
+src/api/profile/query/
+  get-profile.ts
   test/
-    get-server-time.test.ts
+    get-profile.test.ts
 ```
 
 Test the request function's public behavior:

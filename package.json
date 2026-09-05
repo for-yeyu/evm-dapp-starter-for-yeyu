@@ -16,8 +16,7 @@
     "commit": "czg",
     "qwer": "czg",
     "doctor": "pnpm dlx react-doctor@latest",
-    "knip": "knip",
-    "cleanup": "node scripts/remove-example-code.mjs"
+    "knip": "knip"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

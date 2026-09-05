@@ -10,6 +10,9 @@ Goals:
 
 ## Directory Layout
 
+The template starts with this guide only. Add hooks for real features as needed; the following
+structure and `profile` snippets are documentation examples, not preinstalled hooks.
+
 ```text
 src/hooks/
   api/
@@ -27,7 +30,7 @@ src/hooks/
 
 ### Non-API hooks
 - Other normal hooks should be grouped by function and business needs, then stored under `src/hooks`.
-- Current base architecture does not include concrete examples for non-API hook folders yet.
+- Create hook categories only when real functionality needs them.
 
 ### `api/<domain>/query/`
 - `useQuery` hooks for read behavior.
@@ -47,8 +50,8 @@ src/hooks/
 Keep similar structure between hooks and API modules.
 
 ```text
-src/api/token/query/get-balance.ts
-src/hooks/api/token/query/use-balance.ts
+src/api/profile/query/get-profile.ts
+src/hooks/api/profile/query/use-profile.ts
 ```
 
 This mapping ensures API function and hook wrapper can be found immediately.
@@ -86,13 +89,13 @@ Example:
 
 ```ts
 import { useQuery } from '@tanstack/react-query'
-import { getServerTime } from '@/api/time/query/get-server-time'
+import { getProfile } from '@/api/profile/query/get-profile'
 
-export function useServerTime() {
+export function useProfile() {
   return useQuery({
-    queryKey: ['server-time'],
+    queryKey: ['profile', 'detail'],
     queryFn: async () => {
-      return await getServerTime()
+      return await getProfile()
     },
   })
 }

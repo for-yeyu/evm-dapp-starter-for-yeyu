@@ -13,7 +13,7 @@ Applies to `src/ui/**`.
 
 1. `src/ui/app` mirrors `src/app` route structure.
 2. Page implementation entry file is `index.tsx` in each route folder.
-3. Internal child files use lowercase kebab-case (for example `server-config.tsx`).
+3. Internal child files use lowercase kebab-case (for example `profile-details.tsx`).
 4. Shared route layout components live in `src/ui/app/layout`.
 5. Route-group-local layout components may live in route-local `layout/` folders.
 6. Do not create `index.ts` barrel exports for UI modules.

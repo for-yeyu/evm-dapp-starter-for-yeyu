@@ -1,6 +1,6 @@
 export default {
   ignore: {
-    rules: ['react/no-danger', 'jsx-a11y/no-autofocus'],
+    rules: ['react/no-danger', 'jsx-a11y/no-autofocus', 'react-doctor/require-pnpm-hardening'],
     files: ['src/ui/shadcn/**', 'src/lib/utils/shadcn/**'],
     overrides: [
       {

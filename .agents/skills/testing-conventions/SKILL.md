@@ -30,16 +30,16 @@ Place each test in a `test/` directory inside the directory that contains the so
 
 ```text
 src/configs/validator/
-  server.ts
+  app.ts
   test/
-    server.test.ts
+    app.test.ts
 ```
 
 ```text
-src/api/time/query/
-  get-server-time.ts
+src/api/profile/query/
+  get-profile.ts
   test/
-    get-server-time.test.ts
+    get-profile.test.ts
 ```
 
 Rules:
@@ -93,4 +93,3 @@ Do not run `dev`, `build`, or `lint` as part of this testing workflow.
 - No UI or browser test dependencies were added.
 - No real network, current-time, or machine-environment dependency was introduced.
 - Focused tests and typecheck were run when applicable.
-

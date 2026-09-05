@@ -6,6 +6,27 @@ A Next.js + React Query + wagmi starter focused on clean layering:
 - `api` contains request functions.
 - `hooks` is the only client-facing API call layer.
 
+## Template Scope
+
+The default source tree contains infrastructure and a minimal home page, not runnable business demos.
+Wallet connection, chain switching, providers, HTTP/error handling, config validation, styles, and
+infrastructure tests are included. No example cleanup step is needed.
+
+`src/api` and `src/hooks` start with documentation only. Create API domains, hooks, and local route
+handlers when a real feature needs them; do not add empty feature folders in advance.
+
+Documentation uses a hypothetical `profile` feature to explain the request chain:
+
+```text
+src/ui/app/profile/profile-details.tsx
+-> src/hooks/api/profile/query/use-profile.ts
+-> src/api/profile/query/get-profile.ts
+-> src/app/api/profile/route.ts
+```
+
+These are documentation examples, not shipped routes. See `src/ui/README.md`, `src/hooks/README.md`,
+and `src/api/README.md` for the corresponding snippets.
+
 ## Runtime Requirements
 
 - Node.js `>= 20`
@@ -44,15 +65,15 @@ Tests are colocated with the source module in a nested `test/` directory:
 src/
   configs/
     validator/
-      server.ts
+      app.ts
       test/
-        server.test.ts
-  api/
-    time/
-      query/
-        get-server-time.ts
+        app.test.ts
+  lib/
+    utils/
+      formatter/
+        misc.ts
         test/
-          get-server-time.test.ts
+          misc.test.ts
 ```
 
 Keep one test file focused on the matching source module. Use `pnpm test` for a one-time local or

@@ -16,13 +16,12 @@ src/configs/
     app.ts           # zod validation for app identity env
     environment.ts   # zod validation for environment env
     wallet.ts        # zod validation for wallet provider env
-    server.ts        # zod validation for server-only env
     index.ts         # validation entry called by next.config.ts
   app.ts             # public app identity config
   environment.ts     # public environment config and type
   wallet.ts          # public wallet provider config
   chains.ts          # public EVM chain config
-  server.ts          # server-only secrets
+  server.ts          # server-only config entry, initially empty
 ```
 
 ## Validation
@@ -52,6 +51,10 @@ import { serverConfig } from '@/configs/server'
 
 `server.ts` must include `import 'server-only'` and must never be imported by client components.
 
+The template has no required server secret. `serverConfig` starts empty; add
+`src/configs/validator/server.ts` and call its validator from `validateConfigEnv()` only when real
+server-only values are introduced. Never expose secrets through route responses or client props.
+
 ## How To Add Env Values
 
 1. Add the value to the matching zod schema in `src/configs/validator/<domain>.ts`.
@@ -76,7 +79,7 @@ export const appConfig = {
 }
 ```
 
-Server-only example:
+Server-only example (documentation only; add this validator when a feature needs a secret):
 
 ```ts
 // src/configs/validator/server.ts
@@ -103,12 +106,10 @@ src/configs/validator/
   app.ts
   environment.ts
   wallet.ts
-  server.ts
   test/
     app.test.ts
     environment.test.ts
     wallet.test.ts
-    server.test.ts
 ```
 
 Cover valid values and each meaningful validation boundary, including missing, blank, and invalid

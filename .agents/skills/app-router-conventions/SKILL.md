@@ -20,10 +20,10 @@ Applies to `src/app/**`, including page route entries and `src/app/api/**/route.
 Example:
 
 ```tsx
-import { ServerTimePage } from '@/ui/app/examples/server-time'
+import { HomePage } from '@/ui/app/(home)'
 
 export default function Page() {
-  return <ServerTimePage />
+  return <HomePage />
 }
 ```
 
@@ -32,8 +32,8 @@ export default function Page() {
 Keep route path and UI path aligned:
 
 ```text
-src/app/examples/server-time/page.tsx
-src/ui/app/examples/server-time/index.tsx
+src/app/(home)/page.tsx
+src/ui/app/(home)/index.tsx
 ```
 
 ## Route Handler Rules

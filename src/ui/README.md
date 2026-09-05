@@ -27,12 +27,12 @@ src/ui/
 - Mirrors the route structure in `src/app`.
 - Contains real page components used by route entries.
 - Route entry component file uses `index.tsx`.
-- Internal child component files should use kebab-case names, for example `server-config.tsx`.
+- Internal child component files should use kebab-case names, for example `profile-details.tsx`.
 
 ### `app/layout/`
 - Stores layout components shared by multiple route groups.
-- Example: `header` is shared by both `(home)` and `examples`.
-- Route-local layout components can also live under a specific route folder, for example `app/examples/layout/`.
+- The root layout mounts the shared `header` for all routes.
+- Route-local layout components can also live under a specific route folder when needed.
 
 ### `components/providers/`
 - Stores providers and global handlers.
@@ -58,8 +58,8 @@ src/ui/
 Keep directory names aligned between route entries and page implementations.
 
 ```text
-src/app/examples/server-time/page.tsx
-src/ui/app/examples/server-time/index.tsx
+src/app/(home)/page.tsx
+src/ui/app/(home)/index.tsx
 ```
 
 This mapping makes route-to-UI lookup immediate.
@@ -68,7 +68,7 @@ This mapping makes route-to-UI lookup immediate.
 
 1. Page route implementation entry file is `index.tsx` under `src/ui/app/**`.
 2. Internal child component files use lowercase kebab-case naming.
-3. Prefer explicit component names by role, such as `HomePage`, `ServerTimePage`, `ServerConfig`.
+3. Prefer explicit component names by role, such as `HomePage` and `Header`.
 
 ## Component Authoring Rules
 
@@ -90,7 +90,36 @@ Rules:
 2. Add UI implementation in `src/ui/app/<route>/index.tsx`.
 3. Keep route-to-UI folder mapping consistent.
 4. Put route-local supporting components in the same folder using kebab-case filenames.
-5. If a layout is shared only inside a route group (for example `examples`), create `layout/` inside that route folder.
+5. If a layout is shared only inside a route group, create `layout/` inside that route folder.
+
+## Client Data Example
+
+This hypothetical `src/ui/app/profile/profile-details.tsx` component consumes the hook documented in
+`src/hooks/README.md`. The template does not include a profile route or component.
+
+```tsx
+'use client'
+
+import type { ComponentProps, FC } from 'react'
+import { useProfile } from '@/hooks/api/profile/query/use-profile'
+
+export const ProfileDetails: FC<ComponentProps<'div'>> = () => {
+  const { data: profile, isPending, isError } = useProfile()
+
+  if (isPending) {
+    return <div>Loading profile...</div>
+  }
+
+  if (isError) {
+    return <div>Unable to load profile.</div>
+  }
+
+  return <div>{profile.displayName}</div>
+}
+```
+
+Keep the route's `index.tsx` as a composition entry that renders focused child components such as
+`ProfileDetails`. Request failures still flow through the shared error infrastructure.
 
 ## Design Principles
 

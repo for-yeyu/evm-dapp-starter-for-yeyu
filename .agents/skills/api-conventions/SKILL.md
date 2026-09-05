@@ -22,7 +22,7 @@ src/api/<domain>/
 
 Rules:
 
-1. `types/` is required, with named files such as `get-server-time-result.ts`.
+1. `types/` is required, with named files such as `get-profile-result.ts`.
 2. Create `query/` only when read/fetch functions exist.
 3. Create `mutation/` only when write/side-effect functions exist.
 4. Do not create empty folders just to satisfy a template.

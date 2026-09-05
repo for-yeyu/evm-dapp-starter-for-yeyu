@@ -12,12 +12,12 @@ Goals:
 ```text
 src/app/
   (home)/                 # Route group entries
-  examples/               # Route entries for examples
-  api/                    # Route handlers
   layout.tsx              # Root layout entry
   error.tsx               # Error boundary entry
   not-found.tsx           # Not-found entry
 ```
+
+The template ships only the home route. Add `api/` route handlers and business routes when needed.
 
 ## Responsibilities
 
@@ -36,11 +36,13 @@ src/app/
 API route handlers are tested as functions and do not require page rendering:
 
 ```text
-src/app/api/time/
+src/app/api/profile/
   route.ts
   test/
     route.test.ts
 ```
+
+This is an illustrative layout for a future endpoint, not a preinstalled API route.
 
 Cover successful responses, known `BaseError` responses, and unexpected error responses through the
 handler's public response contract. Keep route tests focused on handler behavior and leave shared
@@ -66,17 +68,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 Rules:
 - Use only `Page` or `Layout` as the exported function name in route files.
-- Return a route-named UI component, such as `ServerTimePage`, `TransferPage`, `HomePage`.
+- Return a route-named UI component, such as `HomePage`.
 - UI component should come from the mirrored path under `src/ui/app`.
 
 Example:
 
 ```tsx
-// src/app/examples/server-time/page.tsx
-import { ServerTimePage } from '@/ui/app/examples/server-time'
+import { HomePage } from '@/ui/app/(home)'
 
 export default function Page() {
-  return <ServerTimePage />
+  return <HomePage />
 }
 ```
 
@@ -96,8 +97,8 @@ Exception:
 Keep matching directory names between `src/app` and `src/ui/app`.
 
 ```text
-src/app/examples/server-time/page.tsx
-src/ui/app/examples/server-time/index.tsx
+src/app/(home)/page.tsx
+src/ui/app/(home)/index.tsx
 ```
 
 This one-to-one naming makes route-to-UI lookup immediate.
@@ -129,4 +130,4 @@ This one-to-one naming makes route-to-UI lookup immediate.
 
 ## Further Reading
 
-For `src/ui` directory rules, read `src/ui/readme.md`.
+For `src/ui` directory rules, read `src/ui/README.md`.

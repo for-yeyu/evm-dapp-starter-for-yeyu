@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest'
 import { validateAppEnv } from '../app'
 import { validateEnvironmentEnv } from '../environment'
 import { validateConfigEnv } from '../index'
-import { validateServerEnv } from '../server'
 import { validateWalletEnv } from '../wallet'
 
 vi.mock('../app', () => ({
@@ -11,10 +10,6 @@ vi.mock('../app', () => ({
 
 vi.mock('../environment', () => ({
   validateEnvironmentEnv: vi.fn(),
-}))
-
-vi.mock('../server', () => ({
-  validateServerEnv: vi.fn(),
 }))
 
 vi.mock('../wallet', () => ({
@@ -28,6 +23,5 @@ describe('validateConfigEnv', () => {
     expect(validateEnvironmentEnv).toHaveBeenCalledOnce()
     expect(validateAppEnv).toHaveBeenCalledOnce()
     expect(validateWalletEnv).toHaveBeenCalledOnce()
-    expect(validateServerEnv).toHaveBeenCalledOnce()
   })
 })

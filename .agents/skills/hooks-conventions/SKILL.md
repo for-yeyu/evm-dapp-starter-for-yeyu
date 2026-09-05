@@ -30,7 +30,7 @@ Not allowed:
 ## Non-API Hooks
 
 Other hooks should be grouped by function/business categories under `src/hooks`.
-Current base architecture does not provide non-API folder examples.
+Create hook categories only when real functionality needs them.
 
 ## Hook Shape Rules
 
@@ -62,8 +62,8 @@ Current base architecture does not provide non-API folder examples.
 Examples:
 
 ```ts
-queryKey: ['time', 'server']
-queryKey: ['token', 'balance', { address }]
+queryKey: ['profile', 'detail']
+queryKey: ['profile', 'detail', { account }]
 ```
 
 ## Review Checklist
