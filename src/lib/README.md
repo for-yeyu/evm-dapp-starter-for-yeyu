@@ -30,6 +30,8 @@ src/lib/
 - Defines base error model (`BaseError`) and typed errors (request/EVM).
 - Provides global `errorStore` for unified client-side error handling.
 - `BaseError.needFix` is used by HTTP response wrappers to distinguish fix-needed errors.
+- `BaseError.data` and `cause` hold internal diagnostics and are never serialized by `withResponse`.
+- `BaseError.publicData` contains explicitly client-safe error details, or `null` when omitted.
 
 ### `common/web3/`
 - Defines `wagmiConfig` and wallet connector setup.
@@ -37,7 +39,7 @@ src/lib/
 - Converts third-party wagmi/viem errors to project-level error classes.
 
 ### `http/`
-- `ky.ts`: wrapped `apiRequest` helper with unified error conversion.
+- `ky.ts`: public `apiRequest` and `httpRequest` helpers with unified error conversion.
 - `next.ts`: `withResponse` wrapper for Next.js route handlers (`src/app/api/**`).
 - `react-query.ts`: project-level `queryClient` and query error bridge to `errorStore`.
 
@@ -71,6 +73,31 @@ For other directories (`common/`, `http/`, `runtime/`):
 5. Shared errors should prefer extending `BaseError` for consistent handling and transport.
 6. Utilities should avoid `index.ts` barrel exports. Existing `index.ts` files that contain real implementation code are not barrel exports.
 
+## HTTP Error Contract
+
+`withResponse` returns successful handler results as JSON with status `200`.
+
+- Expected `BaseError` failures with `needFix: false` return status `400` and
+  `{ name, message, data: publicData }`. Setting `needFix: false` declares that the error name and
+  message are safe for clients. Put only explicit public response fields in `publicData`.
+- All other failures return status `500` with
+  `{ name: 'InternalServerError', message: 'Internal Server Error', data: null }`.
+  The original thrown value is logged on the server, not included in the response.
+- Never put secrets, upstream responses, or internal diagnostic objects in `publicData`.
+  `data` and `cause` remain available for internal debugging regardless of the response.
+
+The transport uses ky 2's pre-parsed `HTTPError.data`; its response body has already been consumed.
+`httpRequest` preserves the HTTP status and parsed body in `HttpRequestError`.
+`apiRequest` converts only error bodies matching the `{ name: string, message: string, data }`
+contract into `ApiRequestError`. Other response shapes remain `HttpRequestError` failures.
+
+`httpRequest` is a supported template API even before any feature calls an external service.
+Its `@public` tag keeps this single export out of Knip's unused-export reports, including production
+scans. A rule-specific React Doctor directive on the declaration also retains this single public
+export for scanners that do not read Knip's tags. The exception applies only to `httpRequest` because
+the template supports external APIs without shipping a business consumer. Revisit it if that public
+capability is removed. Do not add dummy consumers or ignore the entire HTTP module.
+
 ## Testing
 
 Test infrastructure and pure utility behavior without a browser environment. Keep the test beside
@@ -84,8 +111,10 @@ src/lib/utils/formatter/
 ```
 
 Prioritize observable behavior for formatters, error classes, HTTP wrappers, and response helpers.
-Mock network transport at `ky` or the project request-wrapper boundary. Keep foundational
-infrastructure tests focused and avoid coupling them to internal local variables.
+For HTTP wrapper tests, keep the real ky implementation and replace its `fetch` option with a mock
+that returns standard `Response` objects. This covers ky's actual error-data decoding behavior
+without network requests. API request-function tests mock the project request-wrapper boundary.
+Keep foundational infrastructure tests focused and avoid coupling them to internal local variables.
 
 ## How To Add New Code In `lib`
 

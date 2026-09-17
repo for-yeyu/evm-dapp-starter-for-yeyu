@@ -52,6 +52,9 @@ Agents should follow `AGENTS.md` command restrictions instead of running project
 
 `knip.json` registers `doctor.config.ts` as a tool entry point and excludes unused export reports
 for generated shadcn primitives. Other Knip checks remain enabled for those files.
+The supported external transport `httpRequest` is tagged `@public`, so Knip does not report it as
+unused before an application adds an external API consumer. This exception is scoped to one export.
+The declaration also has a rule-specific React Doctor directive for the same template API boundary.
 
 ## Testing
 

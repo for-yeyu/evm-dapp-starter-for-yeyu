@@ -47,6 +47,12 @@ For `src/lib/common/**`, `src/lib/http/**`, and `src/lib/runtime/**`:
 4. Route handlers should let `withResponse` serialize thrown errors.
 5. Request functions should let `apiRequest` and `httpRequest` map transport errors.
 6. UI should display hook errors explicitly when the view needs user-facing feedback.
+7. `BaseError.data` and `cause` are internal diagnostics. Set `publicData` explicitly for client-safe
+   response details; set `needFix: false` only for client-safe error names and messages.
+8. `withResponse` redacts all internal/unexpected failures as `InternalServerError` and logs the
+   original thrown value on the server.
+9. Retain the public `httpRequest` template capability with its symbol-level `@public` tag and
+   rule-specific React Doctor directive, not dummy consumers or file-wide unused-export exclusions.
 
 Add a shared error class only when multiple call sites need the same semantics or when transport/response handling depends on its fields.
 

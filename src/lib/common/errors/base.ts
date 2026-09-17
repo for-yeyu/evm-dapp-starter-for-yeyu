@@ -1,5 +1,6 @@
 export type BaseErrorOptions = {
   data?: unknown
+  publicData?: unknown
   cause?: Error
   needFix?: boolean
 }
@@ -7,6 +8,7 @@ export type BaseErrorOptions = {
 export abstract class BaseError extends Error {
   abstract name: string
   data: unknown
+  publicData: unknown
   cause: Error | null
   needFix: boolean
   handled = false
@@ -14,6 +16,7 @@ export abstract class BaseError extends Error {
   constructor(message: string, options: BaseErrorOptions = {}) {
     super(message)
     this.data = options.data
+    this.publicData = options.publicData ?? null
     this.cause = options.cause ?? null
     this.needFix = options.needFix ?? true
   }

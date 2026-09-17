@@ -75,6 +75,12 @@ export const GET = withResponse((): GetProfileResult => {
 In a real feature, read application data instead of returning the example value. Return an explicit
 public response shape; never serialize server-only secrets into an API response.
 
+Expected business errors extend `BaseError` and set `needFix: false` only when their name and message
+are safe for clients. To return client-safe error details, set `publicData` explicitly; the response
+uses it as `data`. The error's own `data` and `cause` are internal diagnostics and are not exposed.
+Internal and unexpected failures always return the redacted `InternalServerError` response.
+See `src/lib/README.md` for the full HTTP error contract.
+
 ## Client Boundary
 
 Client page components must not request server APIs directly.

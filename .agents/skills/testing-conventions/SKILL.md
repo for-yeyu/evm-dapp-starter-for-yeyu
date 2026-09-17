@@ -57,7 +57,7 @@ Rules:
 3. Use project aliases only when importing another source domain.
 4. Mock external dependencies at the narrowest boundary.
 5. API request tests mock `apiRequest` or `httpRequest`, not the request function under test.
-6. HTTP wrapper tests mock transport behavior at `ky`.
+6. HTTP wrapper tests keep real ky and mock its `fetch` option with standard `Response` objects.
 7. Assert returned values, thrown errors, request parameters, and response contracts.
 8. Do not duplicate implementation logic in test setup.
 

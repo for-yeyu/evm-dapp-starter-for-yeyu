@@ -1,9 +1,17 @@
 import type { NextRequest } from 'next/server'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { TimeoutError } from '../../common/errors/request'
 import { withResponse } from '../next'
 
 const request = undefined as unknown as NextRequest
+
+beforeEach(() => {
+  vi.spyOn(console, 'error').mockImplementation(() => undefined)
+})
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('withResponse', () => {
   it('returns a successful JSON response', async () => {
@@ -12,11 +20,14 @@ describe('withResponse', () => {
 
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toEqual({ ok: true })
+    expect(console.error).not.toHaveBeenCalled()
   })
 
-  it('returns a 400 response for fixable BaseError failures', async () => {
+  it('returns only explicitly public data for expected business failures', async () => {
     const error = new TimeoutError('Invalid request', {
-      data: { field: 'name' },
+      data: { apiSecret: 'private-value' },
+      publicData: { field: 'name' },
+      cause: new Error('Database credentials: private-value'),
       needFix: false,
     })
     const handler = withResponse(() => {
@@ -30,39 +41,33 @@ describe('withResponse', () => {
       message: 'Invalid request',
       data: { field: 'name' },
     })
+    expect(console.error).not.toHaveBeenCalled()
   })
 
-  it('returns a 500 response for BaseError failures that need fixing', async () => {
+  it('does not expose diagnostic data when public data is not specified', async () => {
     const handler = withResponse(() => {
-      throw new TimeoutError('Server failure')
+      throw new TimeoutError('Invalid request', {
+        data: { apiSecret: 'private-value' },
+        needFix: false,
+      })
     })
     const response = await handler(request)
 
-    expect(response.status).toBe(500)
+    expect(response.status).toBe(400)
     await expect(response.json()).resolves.toEqual({
       name: 'TimeoutError',
-      message: 'Server failure',
-      data: undefined,
-    })
-  })
-
-  it('returns an internal server response for regular errors', async () => {
-    const handler = withResponse(() => {
-      throw new Error('Unexpected failure')
-    })
-    const response = await handler(request)
-
-    expect(response.status).toBe(500)
-    await expect(response.json()).resolves.toEqual({
-      name: 'InternalServerError',
-      message: 'Unexpected failure',
+      message: 'Invalid request',
       data: null,
     })
   })
 
-  it('returns a default internal server response for unknown values', async () => {
+  it('redacts BaseError failures that need fixing and logs the original error', async () => {
+    const error = new TimeoutError('Database credentials: private-value', {
+      data: { apiSecret: 'private-value' },
+      publicData: { field: 'name' },
+    })
     const handler = withResponse(() => {
-      throw 'unknown failure'
+      throw error
     })
     const response = await handler(request)
 
@@ -72,5 +77,54 @@ describe('withResponse', () => {
       message: 'Internal Server Error',
       data: null,
     })
+    expect(console.error).toHaveBeenCalledExactlyOnceWith(error)
+  })
+
+  it('redacts regular errors and logs the original error', async () => {
+    const error = new Error('Database credentials: private-value')
+    const handler = withResponse(() => {
+      throw error
+    })
+    const response = await handler(request)
+
+    expect(response.status).toBe(500)
+    await expect(response.json()).resolves.toEqual({
+      name: 'InternalServerError',
+      message: 'Internal Server Error',
+      data: null,
+    })
+    expect(console.error).toHaveBeenCalledExactlyOnceWith(error)
+  })
+
+  it('redacts unknown thrown values and logs the original value', async () => {
+    const error = { apiSecret: 'private-value' }
+    const handler = withResponse(() => {
+      throw error
+    })
+    const response = await handler(request)
+
+    expect(response.status).toBe(500)
+    await expect(response.json()).resolves.toEqual({
+      name: 'InternalServerError',
+      message: 'Internal Server Error',
+      data: null,
+    })
+    expect(console.error).toHaveBeenCalledExactlyOnceWith(error)
+  })
+
+  it('redacts asynchronous handler failures', async () => {
+    const error = new Error('Database credentials: private-value')
+    const handler = withResponse(async () => {
+      throw error
+    })
+    const response = await handler(request)
+
+    expect(response.status).toBe(500)
+    await expect(response.json()).resolves.toEqual({
+      name: 'InternalServerError',
+      message: 'Internal Server Error',
+      data: null,
+    })
+    expect(console.error).toHaveBeenCalledExactlyOnceWith(error)
   })
 })
