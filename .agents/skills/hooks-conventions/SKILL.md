@@ -32,6 +32,14 @@ Not allowed:
 Other hooks should be grouped by function/business categories under `src/hooks`.
 Create hook categories only when real functionality needs them.
 
+### Web3 Hooks
+
+- Put wallet/chain actions and contract reads/writes in focused `src/hooks/web3` hooks over wagmi/viem.
+- No `src/api` counterpart is required; the mirror rules apply to `src/hooks/api` only.
+- Use the installed SDK hooks and shared QueryClient, not an additional query/mutation wrapper.
+- Keep simulation, write, and receipt tracking separate. A hash is not confirmed success.
+- Capture account/chain for each submission; isolate caches and receipt tracking by that scope.
+
 ## Hook Shape Rules
 
 1. Keep each hook focused on one responsibility.
@@ -41,6 +49,8 @@ Create hook categories only when real functionality needs them.
 5. Use a Zustand store when multiple distant components need shared app state.
 
 ## Workflow
+
+For HTTP hooks:
 
 1. Confirm API function exists in `src/api/<domain>/query|mutation`.
 2. Create corresponding hook in `src/hooks/api/<domain>/query|mutation`.
@@ -57,7 +67,10 @@ Create hook categories only when real functionality needs them.
 5. Do not include functions, class instances, Dates, or unstable objects in query keys.
 6. Query hooks call exactly one request function from `src/api` unless composition is explicitly required.
 7. Use `enabled` for user-triggered or dependency-gated queries.
-8. Mutations should invalidate or update affected query keys after success.
+8. HTTP mutations invalidate/update affected keys after success; chain writes refresh reads only
+   after a successful receipt, using the submission account/chain.
+9. QueryCache and MutationCache report failures globally. Do not add duplicate error toasts or
+   local catches; follow the local-feedback contract in `src/hooks/README.md`.
 
 Examples:
 

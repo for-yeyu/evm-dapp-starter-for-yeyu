@@ -3,8 +3,8 @@
 A Next.js + React Query + wagmi starter focused on clean layering:
 - `app` is route entry only.
 - `ui` is page/component implementation.
-- `api` contains request functions.
-- `hooks` is the only client-facing API call layer.
+- `api` contains HTTP request functions.
+- `hooks/api` wraps HTTP requests; `hooks/web3` wraps wagmi/viem chain and wallet actions.
 
 ## Template Scope
 
@@ -29,8 +29,22 @@ and `src/api/README.md` for the corresponding snippets.
 
 ## Runtime Requirements
 
-- Node.js `>= 20`
-- pnpm `>= 9`
+- Default: Node.js `24`, declared in `.nvmrc`. Run `nvm use` if using nvm.
+- Minimum Node.js version: `>=22.22.1`.
+- pnpm `9.13.2`, pinned by `packageManager` in `package.json`.
+
+## Initialize A Product
+
+1. Install the locked dependencies yourself with `pnpm install --frozen-lockfile`.
+2. Set your app name and your own WalletConnect project ID in the matching env file. The shipped
+   ID is template metadata, not the identity of your new product.
+3. Review `src/configs/chains.ts`: development currently uses Sepolia/Arbitrum Sepolia, production
+   uses Ethereum/Arbitrum. Configure real contract addresses and RPC endpoints for your product.
+4. Set `NEXT_PUBLIC_ENVIRONMENT` deliberately for previews; Next's runtime mode is not the product
+   network selector. Use ignored `.env.development.local`/`.env.production.local` for local overrides.
+5. Replace the favicon, app metadata, language, and theme as required. Never put credentials in
+   `NEXT_PUBLIC_*` values or public RPC URLs.
+6. Follow the layer guides below. Keep the default page minimal until a real feature is implemented.
 
 ## Common Commands
 
@@ -87,8 +101,8 @@ CI run, `pnpm test:watch` while developing, and `pnpm test:coverage` to inspect 
 src/
   app/        # Next.js route entries (thin layer)
   ui/         # UI implementation (pages + shared components)
-  api/        # Request functions by domain (query/mutation/types)
-  hooks/      # Hooks layer (React Query wrappers over src/api)
+  api/        # HTTP functions by domain (query/mutation/types)
+  hooks/      # HTTP React Query hooks + focused wagmi/viem web3 hooks
   configs/    # Domain runtime config and build-time env validation
   lib/        # Infrastructure layer (errors/http/runtime/web3/utils)
   styles/     # Global style entry, shadcn base css, fonts
@@ -98,11 +112,13 @@ src/
 
 1. Client page components must not call network requests directly.
 2. Client pages/components call hooks in `src/hooks`.
-3. Hooks call request functions in `src/api`.
+3. HTTP hooks call request functions in `src/api`; web3 hooks use wagmi/viem directly.
 4. `src/api` uses wrapped ky request helpers only:
    - `apiRequest` for `src/app/api/**` endpoints
    - `httpRequest` for external endpoints
 5. `src/app` should stay minimal and route-focused; page implementation lives in `src/ui/app`.
+6. Do not put RPC calls, signatures, or wallet transactions through ky. Track receipts separately
+   from submission and isolate account/chain-sensitive caches.
 
 ## Documentation Index
 
@@ -118,16 +134,3 @@ All project architecture docs:
 - `src/configs/README.md`: Env validation and domain config boundaries
 - `src/lib/README.md`: Infrastructure modules and change policy
 - `src/styles/README.md`: Style entry and CSS extension rules
-
-## README Scan Result (Project Scope)
-
-Scanned `README.md` files in this repository (excluding `backup` directories):
-
-- `README.md`
-- `src/app/README.md`
-- `src/ui/README.md`
-- `src/api/README.md`
-- `src/hooks/README.md`
-- `src/configs/README.md`
-- `src/lib/README.md`
-- `src/styles/README.md`

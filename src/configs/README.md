@@ -23,6 +23,18 @@ src/configs/
   chains.ts          # public EVM chain config
 ```
 
+## Configuration Sources
+
+Not every config value needs to come from `.env`.
+
+- Code-defined config is valid. For example, `chains.ts` defines chain metadata and supported-chain
+  lists directly in code; only the environment selector comes from environment config.
+- Use environment variables when deployment requirements or secrets call for them, not simply
+  because a value is configuration. Validate env-sourced values before exposing them at runtime.
+
+Choose the source based on the actual feature and deployment requirements. Do not automatically
+move code-defined config into `.env`. If the choice is unclear, ask the developer before implementing it.
+
 ## Validation
 
 Zod validation lives only in `src/configs/validator/**`.
@@ -30,9 +42,10 @@ Zod validation lives only in `src/configs/validator/**`.
 `next.config.ts` should call `validateConfigEnv()` from `src/configs/validator`. Do not define
 schemas inline there.
 
-Runtime config modules such as `app.ts`, `environment.ts`, and `chains.ts` should only expose
-already-validated values from `process.env` with narrow TypeScript types. Do not import `zod` or
-validator modules from runtime config.
+For env-sourced config, runtime modules expose already-validated `process.env` values with narrow
+TypeScript types. Code-defined config, such as the chain lists in `chains.ts`, stays directly in
+the matching domain module and does not require env validation. Do not import `zod` or validator
+modules from runtime config.
 
 ## Import Rules
 
@@ -89,6 +102,13 @@ export const serverConfig = {
 }
 ```
 
+## Chain And Contract Config
+
+For dapp features, keep chain lists/RPC metadata in `chains.ts`, typed per-chain contract addresses
+in a feature-specific config module, and ABI assets in `src/lib/abis`. Never silently substitute an
+address or another network when a deployment is missing. Public browser RPC URLs cannot contain
+secrets.
+
 ## Testing
 
 Environment validators are tested as plain functions in the same module directory:
@@ -108,6 +128,7 @@ the validator's public behavior.
 
 ## Checklist For PRs
 
+- Config sources are chosen deliberately; unclear choices are confirmed with the developer.
 - Zod imports stay in `src/configs/validator/**`.
 - `next.config.ts` calls `validateConfigEnv()`.
 - App identity and wallet provider values stay in `app.ts`.

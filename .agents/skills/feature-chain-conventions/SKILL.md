@@ -9,7 +9,7 @@ description: Use when implementing, planning, or reviewing feature work that may
 
 Use this as the navigation skill before touching multiple project layers.
 
-Canonical client data flow:
+Canonical HTTP data flow:
 
 ```text
 src/ui/app page/component
@@ -18,6 +18,18 @@ src/ui/app page/component
 -> src/app/api route handler or external service
 -> src/lib/http/configs/errors infrastructure
 ```
+
+Canonical chain/wallet flow:
+
+```text
+src/ui/app page/component
+-> focused src/hooks/web3 hook
+-> wagmi/viem RPC or wallet action
+-> src/configs chain/contracts + src/lib/abis + shared providers/errors
+```
+
+Do not route RPC/signing through ky or add `src/api` wrappers around wagmi hooks.
+RainbowKit presentation hooks may stay in wallet UI; business chain actions belong in web3 hooks.
 
 Canonical route mapping:
 
@@ -31,7 +43,7 @@ src/app/<route>/page.tsx
 - `src/app/**`: thin route entries and Next framework files.
 - `src/ui/**`: page UI, user interactions, providers, shared UI, SVG components.
 - `src/hooks/**`: React hooks; API hooks are the only client-side path to request functions.
-- `src/api/**`: typed request functions and API contracts.
+- `src/api/**`: typed HTTP request functions and API contracts.
 - `src/app/api/**`: server route handlers.
 - `src/configs/**`: validated runtime config entry points.
 - `src/lib/**`: foundational HTTP, error, runtime, web3, and utility code.
@@ -40,7 +52,8 @@ src/app/<route>/page.tsx
 ## Skill Routing
 
 - New page or route entry: use `app-router-conventions` and `ui-conventions`.
-- Client data fetching or mutations: use `hooks-conventions` and `api-conventions`.
+- HTTP data fetching or mutations: use `hooks-conventions` and `api-conventions`.
+- Chain RPC or wallet actions: use `hooks-conventions`; use `configs-conventions` for addresses/chains and `lib-infrastructure-conventions` for ABI or shared web3 wiring.
 - Next route handler under `src/app/api`: use `app-router-conventions` and `lib-infrastructure-conventions` when shared error or response behavior changes.
 - Env/config changes: use `configs-conventions`.
 - Shared utility, error, HTTP, runtime, or web3 changes: use `lib-infrastructure-conventions`.

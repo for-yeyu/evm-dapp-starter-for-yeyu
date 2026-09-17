@@ -1,6 +1,8 @@
 # API Guide
 
-This directory stores API request functions by domain.
+This directory stores HTTP API request functions by domain. Chain RPC, wallet signatures, contract
+writes, and receipt tracking belong in `src/hooks/web3` over wagmi/viem, not in ky wrappers or HTTP
+mutation folders.
 
 Goals:
 - Keep network request logic centralized in `src/api`.
@@ -29,14 +31,14 @@ src/api/
 
 ### `mutation/`
 - Write/update request functions.
-- Typical usage: create/update/delete actions, transaction actions.
+- Typical usage: HTTP create/update/delete actions. Wallet transactions are not HTTP mutations.
 
 ### `types/`
 - Shared API contracts used by `query`/`mutation` and callers.
 
 ## Request Rules
 
-All request functions in `src/api` must use wrapped request helpers from `@/lib/http/ky`.
+All HTTP request functions in `src/api` must use wrapped request helpers from `@/lib/http/ky`.
 
 1. Use `apiRequest` for Next.js route handlers under `src/app/api/**`.
 2. Use `httpRequest` for external endpoints.
@@ -137,7 +139,7 @@ itself or duplicate the implementation inside the test.
 
 ## Design Principles
 
-1. Single request layer: all API calls live in `src/api`.
+1. Single HTTP request layer: all HTTP API calls live in `src/api`.
 2. Explicit intent: `query` and `mutation` are separated.
 3. Typed contracts: params and result types live in named files under `types`.
 4. Direct imports: callers import from concrete files instead of folder paths.

@@ -13,8 +13,8 @@ Use this skill for any implementation, refactor, or review task in this reposito
 
 1. `src/app` is route-entry only.
 2. `src/ui` implements pages and reusable UI.
-3. `src/api` owns request functions.
-4. `src/hooks` is the only client-facing API call layer.
+3. `src/api` owns HTTP request functions; use wrapped ky for HTTP only.
+4. `src/hooks/api` wraps HTTP functions; `src/hooks/web3` wraps wagmi/viem chain and wallet actions.
 5. Client components must not request APIs directly.
 6. `src/configs` owns domain runtime config and build-time env validation boundaries.
 7. `src/lib` is infrastructure and should remain stable.
@@ -35,14 +35,14 @@ Use this skill for any implementation, refactor, or review task in this reposito
 1. Identify changed layer(s).
 2. Load matching layer skills and apply hard rules.
 3. Keep naming/export patterns consistent with conventions.
-4. Run checks relevant to the change (`pnpm lint`, `pnpm typecheck`, tests when needed).
+4. Follow `AGENTS.md` Command Restrictions; run permitted tests relevant to the change.
 5. Verify no layer boundary violations are introduced.
 
 ## Global TypeScript And Lint Rules
 
 1. Use `type` for type definitions; do not introduce `interface`.
 2. If a type is not exported/reused, keep it inline instead of creating a named type alias.
-3. Lint is based on Biome. Treat `pnpm lint` as the Biome check entry.
+3. Follow the repository's Biome style. Agent execution permissions come from `AGENTS.md`.
 
 ## Definition Of Done
 

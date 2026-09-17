@@ -7,7 +7,9 @@ description: Use when creating or updating src/api request functions, contracts,
 
 ## Scope
 
-Applies to `src/api/**`.
+Applies to HTTP requests in `src/api/**`. Chain RPC, signing, and transaction receipt tracking use
+focused `src/hooks/web3` hooks over wagmi/viem. Do not force these
+operations through ky or create HTTP API modules solely to wrap wagmi hooks.
 
 ## Domain Structure
 
@@ -31,7 +33,7 @@ Rules:
 
 ## Hard Request Rules
 
-All request functions must use wrapped ky helpers from `@/lib/http/ky`:
+All HTTP request functions must use wrapped ky helpers from `@/lib/http/ky`:
 
 1. Use `apiRequest` for endpoints under `src/app/api/**`.
 2. Use `httpRequest` for non-`src/app/api/**` endpoints.

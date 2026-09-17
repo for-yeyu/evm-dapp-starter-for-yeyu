@@ -1,6 +1,10 @@
-import { QueryCache, QueryClient } from '@tanstack/react-query'
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
 import { stringify } from 'viem'
 import { errorStore } from '../common/errors/error-store'
+
+function reportRequestError(error: unknown) {
+  errorStore.getState().setLastError(error instanceof Error ? error : new Error(String(error)))
+}
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -11,8 +15,9 @@ export const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({
-    onError: error => {
-      errorStore.getState().setLastError(error instanceof Error ? error : new Error(String(error)))
-    },
+    onError: reportRequestError,
+  }),
+  mutationCache: new MutationCache({
+    onError: reportRequestError,
   }),
 })

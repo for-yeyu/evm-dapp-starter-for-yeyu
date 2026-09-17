@@ -32,7 +32,7 @@ For `src/lib/common/**`, `src/lib/http/**`, and `src/lib/runtime/**`:
 
 ## Usage Rules
 
-1. API layer transport should use `@/lib/http/ky` wrappers.
+1. HTTP API transport uses `@/lib/http/ky`; chain RPC and signing use wagmi/viem, not ky.
 2. Next route handlers should use `withResponse` from `@/lib/http/next`.
 3. Shared errors should prefer `BaseError` hierarchy.
 4. Runtime initialization should go through `runtime/*` initializers.
@@ -53,6 +53,8 @@ For `src/lib/common/**`, `src/lib/http/**`, and `src/lib/runtime/**`:
    original thrown value on the server.
 9. Retain the public `httpRequest` template capability with its symbol-level `@public` tag and
    rule-specific React Doctor directive, not dummy consumers or file-wide unused-export exclusions.
+10. Both QueryCache and MutationCache bridge failures to `errorStore`. Do not replace this with
+    unhandled-rejection listeners or duplicate hook-level toasts; see `src/hooks/README.md`.
 
 Add a shared error class only when multiple call sites need the same semantics or when transport/response handling depends on its fields.
 

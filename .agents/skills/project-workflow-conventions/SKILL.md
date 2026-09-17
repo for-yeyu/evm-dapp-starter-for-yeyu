@@ -61,12 +61,9 @@ export const Header = ({ title }: { title: string }) => {
 
 ## Command And Dependency Rules
 
-1. Do not run `dev`, `build`, or `lint` commands.
-2. Do not run `npm` commands.
-3. Do not run package-manager commands that download dependencies.
-4. If a new dependency is needed, provide the exact `pnpm add` command for the user to run.
-5. If a dev dependency is needed, provide the exact `pnpm add -D` command for the user to run.
-6. When removing dependencies, remove them from `package.json` only and do not edit `pnpm-lock.yaml`.
+`AGENTS.md` Command Restrictions is the source of truth for command and dependency permissions.
+Read it before executing checks, installing/removing dependencies, or invoking hooks. Skills and
+maintainer command examples do not authorize restricted agent execution.
 
 ## Commit Messages
 

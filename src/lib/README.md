@@ -41,7 +41,7 @@ src/lib/
 ### `http/`
 - `ky.ts`: public `apiRequest` and `httpRequest` helpers with unified error conversion.
 - `next.ts`: `withResponse` wrapper for Next.js route handlers (`src/app/api/**`).
-- `react-query.ts`: project-level `queryClient` and query error bridge to `errorStore`.
+- `react-query.ts`: shared `queryClient`; QueryCache and MutationCache bridge errors to `errorStore`.
 
 ### `runtime/`
 - Initializes and wires global runtime behavior (`initializeEvmStore`, `initializeErrorStore`).
@@ -66,7 +66,7 @@ For other directories (`common/`, `http/`, `runtime/`):
 
 ## Usage Rules
 
-1. API modules should request via `@/lib/http/ky` wrappers only.
+1. HTTP API modules use `@/lib/http/ky`; web3 hooks use wagmi/viem, not ky.
 2. Next.js route handlers should use `withResponse` for consistent success/error payloads.
 3. Client API state should use the shared `queryClient` from `@/lib/http/react-query`.
 4. Global runtime bootstrapping should be done through `runtime/` initializer functions.
@@ -149,7 +149,7 @@ Keep foundational infrastructure tests focused and avoid coupling them to intern
 
 - Change is in `utils/` or `abis/` unless justified by new infra-level requirements.
 - `src/lib/utils/shadcn/**` is unchanged.
-- Request logic uses `apiRequest`, not ad-hoc transport code.
+- HTTP request logic uses `apiRequest`/`httpRequest`; chain RPC and wallet actions use wagmi/viem.
 - Route handlers use `withResponse` for response consistency.
 - Shared errors use `BaseError` hierarchy when appropriate.
 - Utility changes include tests when behavior is complex or easy to regress.

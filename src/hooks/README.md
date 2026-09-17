@@ -3,9 +3,9 @@
 This directory stores application hooks.
 
 Goals:
-- Keep all API-calling hooks in `src/hooks/api`.
+- Keep HTTP API hooks in `src/hooks/api` and chain/wallet hooks in `src/hooks/web3`.
 - Mirror `src/api` structure for fast lookup and maintenance.
-- Use React Query as the only API-calling mechanism in client components.
+- Use React Query for HTTP requests, and wagmi hooks for wallet/chain operations.
 - Import hooks from concrete files instead of barrel exports.
 
 ## Directory Layout
@@ -15,6 +15,7 @@ structure and `profile` snippets are documentation examples, not preinstalled ho
 
 ```text
 src/hooks/
+  web3/                    # Focused wagmi/viem wallet and contract hooks
   api/
     <domain>/
       mutation/            # useMutation hooks
@@ -27,6 +28,12 @@ src/hooks/
 ### `api/`
 - Corresponds to `src/api`.
 - Wraps API functions from `src/api` with React Query hooks.
+
+### `web3/`
+- Wrap wagmi/viem reads, simulation, wallet actions, writes, and receipt tracking in focused hooks.
+- Reuse SDK query/mutation behavior and the shared QueryClient; do not double-wrap wagmi in `useMutation`.
+- No `src/api` counterpart is required. The structure mirror applies to HTTP hooks only.
+- Keep wallet account/chain checks, transaction snapshots, and receipt confirmation explicit.
 
 ### Non-API hooks
 - Other normal hooks should be grouped by function and business needs, then stored under `src/hooks`.
@@ -60,7 +67,7 @@ This mapping ensures API function and hook wrapper can be found immediately.
 
 In client page components, direct server requests are not allowed.
 
-Required flow:
+Required HTTP flow:
 1. Component calls hook from `src/hooks`.
 2. Hook calls API function from `src/api`.
 3. API function executes request with wrapped ky functions.
@@ -105,9 +112,29 @@ export function useProfile() {
 
 1. Hooks are the client-facing API layer.
 2. API modules remain transport-focused; hooks remain state/query-focused.
-3. Structure parity with `src/api` is mandatory.
+3. Structure parity with `src/api` is mandatory for HTTP hooks, not web3 hooks.
 4. Query key design should be deterministic and domain-scoped.
 5. Concrete imports keep module ownership explicit.
+
+## Mutation And Error Feedback
+
+Use `useMutation` for HTTP writes. Call `mutate` from event handlers, expose its pending/error state,
+and invalidate/update the affected query keys in `onSuccess`. Keys for account-scoped data must
+include the normalized account and, when relevant, `chainId`. Never submit the same action while
+pending. Do not treat a wallet transaction hash as HTTP-style completed success.
+
+Both QueryCache and MutationCache forward failures to `errorStore`, including failures consumed
+by `mutate`. An unhandled-rejection listener cannot replace the mutation bridge. Default feedback
+belongs to the global error handler; hooks must not add a second toast or local `try`/`catch`.
+
+When a form owns specific inline feedback for an HTTP `BaseError`, synchronously mark that same
+error instance as `handled` in the hook's `onError` before displaying the local message. The global
+handler defers its toast and respects this flag, while retaining diagnostic logging. This applies
+to project `BaseError` instances, not raw SDK errors that may be converted to a new error instance.
+For wagmi errors, use the global handler and expose transaction/error state without a duplicate toast.
+
+Do not call `mutateAsync` from UI unless the caller has an explicit promise-ownership contract;
+ignoring its rejected promise can report an error twice. Do not suppress errors or return fake success.
 
 ## Checklist For PRs
 

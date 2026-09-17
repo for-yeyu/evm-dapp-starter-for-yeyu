@@ -3,10 +3,15 @@
 ## Command Restrictions
 
 - Do not run `dev`, `build`, or `lint` commands.
+- Do not run type checks, including `typecheck`, `ts:check`, or direct `tsc` invocations.
+- Do not bypass these restrictions through equivalent commands or hooks.
 - Do not run `npm` commands.
 - Do not run package-manager commands that download dependencies.
 - When a dependency is needed, provide the exact `pnpm add` or `pnpm add -D` command for the user to run.
 - When removing a dependency, update `package.json` only. Do not edit lockfile dependency removals; the user will run `pnpm i`.
+
+These restrictions apply to agent execution. Maintainer scripts and CI workflows may use their
+documented commands. Skills must defer to this section rather than prescribe restricted checks.
 
 ## Code Style
 
@@ -26,8 +31,10 @@
 - Keep `src/app` thin and route-focused.
 - Put route UI implementation in mirrored `src/ui/app` paths.
 - Client components must call APIs through `src/hooks`.
-- Hooks call request functions in `src/api`.
+- HTTP hooks in `src/hooks/api` call request functions in `src/api`.
 - API request functions use `apiRequest` for local `src/app/api/**` endpoints and `httpRequest` for external endpoints.
+- Chain RPC and wallet actions use focused `src/hooks/web3` hooks over wagmi/viem, not ky or `src/api`.
+- RainbowKit presentation hooks may be consumed by wallet UI. Keep signing and chain actions in web3 hooks.
 - Route handlers under `src/app/api/**` use `withResponse`.
 - Import from concrete files. Do not add barrel exports.
 

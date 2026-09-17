@@ -75,14 +75,14 @@ Rules:
 
 1. Add the nested `test/` directory beside the source module.
 2. Add the matching `.test.ts` file.
-3. Run the focused test file with `pnpm test -- <test-file>`.
+3. Run the focused test file with `pnpm test <test-file>`.
 4. Run the full suite with `pnpm test`.
 5. Run `pnpm test:coverage` when coverage behavior or shared infrastructure changes.
-6. Run `pnpm typecheck` before handing off the change.
+6. Report test results and any checks not run under `AGENTS.md` Command Restrictions.
 
 Use `pnpm test:watch` when developing interactively.
 
-Do not run `dev`, `build`, or `lint` as part of this testing workflow.
+Follow `AGENTS.md` Command Restrictions. This workflow does not authorize additional checks.
 
 ## Review Checklist
 
@@ -92,4 +92,4 @@ Do not run `dev`, `build`, or `lint` as part of this testing workflow.
 - External transport is mocked at a boundary.
 - No UI or browser test dependencies were added.
 - No real network, current-time, or machine-environment dependency was introduced.
-- Focused tests and typecheck were run when applicable.
+- Permitted focused tests were run; unperformed checks are disclosed.
