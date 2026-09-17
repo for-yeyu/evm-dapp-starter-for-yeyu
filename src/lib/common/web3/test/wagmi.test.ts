@@ -6,7 +6,6 @@ import {
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { appConfig } from '@/configs/app'
 import { chainConfig } from '@/configs/chains'
-import { walletConfig } from '@/configs/wallet'
 import { UnknownEvmError, UserRejectedRequestError } from '../../errors/evm'
 import { convertMaybeEvmError, wagmiConfig } from '../wagmi'
 
@@ -40,7 +39,7 @@ describe('wagmiConfig browser connectors', () => {
 
     expect(getDefaultWallets).toHaveBeenCalledWith({
       appName: appConfig.appName,
-      projectId: walletConfig.walletConnectProjectId,
+      projectId: appConfig.walletConnectProjectId,
     })
   })
 })

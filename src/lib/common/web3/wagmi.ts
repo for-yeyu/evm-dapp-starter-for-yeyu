@@ -8,7 +8,6 @@ import {
 } from 'viem'
 import { appConfig } from '@/configs/app'
 import { chainConfig } from '@/configs/chains'
-import { walletConfig } from '@/configs/wallet'
 import { UnknownEvmError, UserRejectedRequestError } from '../errors/evm'
 
 export const wagmiConfig = createConfig({
@@ -20,7 +19,7 @@ export const wagmiConfig = createConfig({
     typeof window !== 'undefined'
       ? getDefaultWallets({
           appName: appConfig.appName,
-          projectId: walletConfig.walletConnectProjectId,
+          projectId: appConfig.walletConnectProjectId,
         }).connectors
       : undefined,
 })

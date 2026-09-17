@@ -73,7 +73,7 @@ export const GET = withResponse((): GetProfileResult => {
 ```
 
 In a real feature, read application data instead of returning the example value. Return an explicit
-public response shape; never serialize `serverConfig` or server-only secrets into an API response.
+public response shape; never serialize server-only secrets into an API response.
 
 ## Client Boundary
 

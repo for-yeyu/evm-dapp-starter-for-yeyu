@@ -52,7 +52,6 @@ Agents should follow `AGENTS.md` command restrictions instead of running project
 
 `knip.json` registers `doctor.config.ts` as a tool entry point and excludes unused export reports
 for generated shadcn primitives. Other Knip checks remain enabled for those files.
-It also ignores the `server-only` dependency report because Next.js handles that import internally.
 
 ## Testing
 

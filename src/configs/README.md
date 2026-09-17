@@ -3,57 +3,49 @@
 This directory contains domain runtime config and build-time environment validation.
 
 Goals:
-- Keep client-safe values separate from server-only secrets.
+
 - Keep zod out of application runtime imports.
-- Split EVM dapp config by domain instead of one broad client/server object.
+- Group application identity and wallet provider metadata in `app.ts`.
+- Split other EVM dapp config by domain.
 - Validate env values before the app is bundled.
+- Add server-only config only when a real secret is required.
 
 ## Directory Layout
 
 ```text
 src/configs/
   validator/
-    app.ts           # zod validation for app identity env
+    app.ts           # zod validation for app and wallet provider env
     environment.ts   # zod validation for environment env
-    wallet.ts        # zod validation for wallet provider env
     index.ts         # validation entry called by next.config.ts
-  app.ts             # public app identity config
+  app.ts             # public app identity and wallet provider config
   environment.ts     # public environment config and type
-  wallet.ts          # public wallet provider config
   chains.ts          # public EVM chain config
-  server.ts          # server-only config entry, initially empty
 ```
 
 ## Validation
 
 Zod validation lives only in `src/configs/validator/**`.
 
-`next.config.ts` should call `validateConfigEnv()` from `src/configs/validator`. Do not define schemas inline there.
+`next.config.ts` should call `validateConfigEnv()` from `src/configs/validator`. Do not define
+schemas inline there.
 
-Runtime config modules such as `app.ts`, `wallet.ts`, `chains.ts`, and `server.ts` should only expose already-validated values from `process.env` with narrow TypeScript types. Do not import `zod` or validator modules from runtime config.
+Runtime config modules such as `app.ts`, `environment.ts`, and `chains.ts` should only expose
+already-validated values from `process.env` with narrow TypeScript types. Do not import `zod` or
+validator modules from runtime config.
 
 ## Import Rules
-
-Public domain config:
 
 ```ts
 import { appConfig } from '@/configs/app'
 import { chainConfig } from '@/configs/chains'
 import { environmentConfig } from '@/configs/environment'
-import { walletConfig } from '@/configs/wallet'
 ```
 
-Server-only values:
-
-```ts
-import { serverConfig } from '@/configs/server'
-```
-
-`server.ts` must include `import 'server-only'` and must never be imported by client components.
-
-The template has no required server secret. `serverConfig` starts empty; add
-`src/configs/validator/server.ts` and call its validator from `validateConfigEnv()` only when real
-server-only values are introduced. Never expose secrets through route responses or client props.
+The template does not ship an empty server config module. When a feature needs a server secret,
+create `src/configs/validator/server.ts` and `src/configs/server.ts`, import `server-only` from the
+runtime module, and call the validator from `validateConfigEnv()`. Never expose secrets through
+route responses or client props.
 
 ## How To Add Env Values
 
@@ -61,7 +53,7 @@ server-only values are introduced. Never expose secrets through route responses 
 2. Make sure `validateConfigEnv()` calls that validator.
 3. Add the typed value to the matching runtime config module.
 4. Consume public values through the specific domain module.
-5. Consume secrets only through `@/configs/server`.
+5. Create server config files only when a real server-only value is introduced.
 
 Public example:
 
@@ -79,7 +71,7 @@ export const appConfig = {
 }
 ```
 
-Server-only example (documentation only; add this validator when a feature needs a secret):
+Server-only example (add these modules only when a feature needs a secret):
 
 ```ts
 // src/configs/validator/server.ts
@@ -105,11 +97,9 @@ Environment validators are tested as plain functions in the same module director
 src/configs/validator/
   app.ts
   environment.ts
-  wallet.ts
   test/
     app.test.ts
     environment.test.ts
-    wallet.test.ts
 ```
 
 Cover valid values and each meaningful validation boundary, including missing, blank, and invalid
@@ -120,8 +110,9 @@ the validator's public behavior.
 
 - Zod imports stay in `src/configs/validator/**`.
 - `next.config.ts` calls `validateConfigEnv()`.
-- Runtime config is split by domain.
+- App identity and wallet provider values stay in `app.ts`.
+- Other runtime config stays split by domain.
 - Public env values use `NEXT_PUBLIC_*`.
-- Secrets are exported only from `serverConfig`.
-- Client components never import `@/configs/server`.
+- Empty server config modules are not added.
+- Client components never import server-only config.
 - Validator tests are colocated under `src/configs/validator/test`.

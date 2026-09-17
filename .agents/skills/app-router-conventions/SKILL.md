@@ -44,7 +44,7 @@ Applies to `src/app/api/**/route.ts`.
 2. Do not return `NextResponse.json` directly from feature route handlers.
 3. Do not add local `try`/`catch` blocks in feature route handlers.
 4. Do not hide handler errors with alternate success values.
-5. Server-only config must be read through `@/configs/server`.
+5. When a route handler needs a secret, read it through a purpose-built server config module.
 6. Do not put page UI, React hooks, or client component logic in route handlers.
 7. Do not call local `src/api` request functions from route handlers to reach the same app.
 
@@ -76,7 +76,7 @@ Add `export const runtime = 'edge'` only when the endpoint is compatible with an
 - Route file returns route-named UI component from `@/ui/app/...`.
 - Non-static styles are not introduced in `src/app/**`.
 - API handlers are wrapped with `withResponse`.
-- Server secrets stay behind `server.ts`.
+- Server config modules exist only when the app has real server-only values.
 - `src/app` <-> `src/ui/app` mapping remains one-to-one.
 
 ## References
