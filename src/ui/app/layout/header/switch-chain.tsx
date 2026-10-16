@@ -23,10 +23,10 @@ export const SwitchChain: FC<ComponentProps<'div'>> = ({ className, ...props }) 
   return (
     <div className={cn('inline-block', className)} {...props}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant={isWrongNetwork ? 'destructive' : 'outline'}>
-            {isWrongNetwork ? 'Wrong network' : chainConfig.chains[chainId].name}
-          </Button>
+        <DropdownMenuTrigger
+          render={<Button variant={isWrongNetwork ? 'destructive' : 'outline'} />}
+        >
+          {isWrongNetwork ? 'Wrong network' : chainConfig.chains[chainId].name}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           {chainConfig.supportedChainIds.map(chainId => (
