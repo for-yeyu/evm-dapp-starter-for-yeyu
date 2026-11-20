@@ -3,6 +3,7 @@
 This directory stores application hooks.
 
 Goals:
+
 - Keep HTTP API hooks in `src/hooks/api` and chain/wallet hooks in `src/hooks/web3`.
 - Mirror `src/api` structure for fast lookup and maintenance.
 - Use React Query for HTTP requests, and wagmi hooks for wallet/chain operations.
@@ -26,29 +27,35 @@ src/hooks/
 ## Responsibilities
 
 ### `api/`
+
 - Corresponds to `src/api`.
 - Wraps API functions from `src/api` with React Query hooks.
 
 ### `web3/`
+
 - Wrap wagmi/viem reads, simulation, wallet actions, writes, and receipt tracking in focused hooks.
 - Reuse SDK query/mutation behavior and the shared QueryClient; do not double-wrap wagmi in `useMutation`.
 - No `src/api` counterpart is required. The structure mirror applies to HTTP hooks only.
 - Keep wallet account/chain checks, transaction snapshots, and receipt confirmation explicit.
 
 ### Non-API hooks
+
 - Other normal hooks should be grouped by function and business needs, then stored under `src/hooks`.
 - Create hook categories only when real functionality needs them.
 
 ### `api/<domain>/query/`
+
 - `useQuery` hooks for read behavior.
 - Calls functions from concrete files in `src/api/<domain>/query`.
 
 ### `api/<domain>/mutation/`
+
 - `useMutation` hooks for write behavior.
 - Calls functions from `src/api/<domain>/mutation`.
 - Handles query invalidation/update when needed.
 
 ### `api/<domain>/types/`
+
 - Hook-only types (for example, UI-friendly params).
 - Can derive from API types when useful.
 
@@ -68,11 +75,13 @@ This mapping ensures API function and hook wrapper can be found immediately.
 In client page components, direct server requests are not allowed.
 
 Required HTTP flow:
+
 1. Component calls hook from `src/hooks`.
 2. Hook calls API function from `src/api`.
 3. API function executes request with wrapped ky functions.
 
 Not allowed:
+
 - Calling `fetch`, `ky`, or other network methods directly in client components.
 - Calling route handlers directly from components without hooks.
 

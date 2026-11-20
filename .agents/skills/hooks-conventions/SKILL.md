@@ -1,4 +1,5 @@
 ---
+
 name: hooks-conventions
 description: Use when building src/hooks hooks, especially src/hooks/api React Query wrappers mapped to src/api domains, including queryKey design, enabled/refetch behavior, mutation invalidation, cache updates, and hook responsibility boundaries.
 ---

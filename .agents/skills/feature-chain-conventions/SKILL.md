@@ -1,4 +1,5 @@
 ---
+
 name: feature-chain-conventions
 description: Use when implementing, planning, or reviewing feature work that may span src/app, src/ui, src/hooks, src/api, src/app/api route handlers, src/configs, src/lib, or src/styles; use to decide which project layers and convention skills should be applied.
 ---

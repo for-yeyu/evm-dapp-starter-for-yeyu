@@ -1,4 +1,5 @@
 ---
+
 name: testing-conventions
 description: Use when creating, updating, or reviewing Vitest tests for functions, API request functions, route handlers, configs, and infrastructure modules.
 ---

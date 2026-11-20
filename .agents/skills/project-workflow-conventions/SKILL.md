@@ -1,4 +1,5 @@
 ---
+
 name: project-workflow-conventions
 description: Use when writing or reviewing project-wide code style, naming, local types, className extraction, imports, component props boundaries, hook shape, Zustand store usage, command restrictions, dependency changes, package scripts, lockfile behavior, or commitlint-compliant semantic commit messages.
 ---

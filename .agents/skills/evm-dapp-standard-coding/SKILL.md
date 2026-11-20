@@ -1,4 +1,5 @@
 ---
+
 name: evm-dapp-standard-coding
 description: Use for any coding task in this repository to enforce layered architecture across src/app, src/ui, src/api, src/hooks, src/configs, src/lib, and src/styles.
 ---

@@ -3,6 +3,7 @@
 This directory is the App Router entry layer only.
 
 Goals:
+
 - Keep `src/app` focused on routing and framework entry files.
 - Keep page UI implementation inside `src/ui/app`.
 - Keep route files simple, predictable, and easy to search.
@@ -22,11 +23,13 @@ The template ships only the home route. Add `api/` route handlers and business r
 ## Responsibilities
 
 ### `src/app/*`
+
 - Define route entry points (`page.tsx`, `layout.tsx`, route handlers).
 - Keep route files minimal and declarative.
 - Prefer wiring imports and composition only.
 
 ### `src/ui/app/*`
+
 - Implement page UI and interactions.
 - Own most styles, layout details, and view logic.
 - Mirror route structure from `src/app` for fast lookup.
@@ -67,6 +70,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 ```
 
 Rules:
+
 - Use only `Page` or `Layout` as the exported function name in route files.
 - Return a route-named UI component, such as `HomePage`.
 - UI component should come from the mirrored path under `src/ui/app`.
@@ -86,10 +90,12 @@ export default function Page() {
 For non-static pages, do not write page-specific styles directly in `src/app` route files.
 
 Preferred:
+
 - Keep styling in `src/ui/app/**`.
 - Keep `src/app/**` focused on routing and framework contracts.
 
 Exception:
+
 - Fully static pages can keep small local styling if needed.
 
 ## Mapping Rule: `app` <-> `ui/app`

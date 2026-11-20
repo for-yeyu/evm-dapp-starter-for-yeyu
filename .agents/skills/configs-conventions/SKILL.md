@@ -1,4 +1,5 @@
 ---
+
 name: configs-conventions
 description: Use when adding or updating domain runtime config, server-only config, or build-time env validation in src/configs.
 ---

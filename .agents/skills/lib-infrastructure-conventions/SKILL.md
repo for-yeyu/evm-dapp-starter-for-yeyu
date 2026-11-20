@@ -1,4 +1,5 @@
 ---
+
 name: lib-infrastructure-conventions
 description: Use when modifying src/lib infrastructure modules, request/error/runtime wiring, utility helpers, shared errors, response serialization, transport error behavior, or ABI assets.
 ---

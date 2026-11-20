@@ -5,6 +5,7 @@ writes, and receipt tracking belong in `src/hooks/web3` over wagmi/viem, not in 
 mutation folders.
 
 Goals:
+
 - Keep network request logic centralized in `src/api`.
 - Separate read/write behavior with `query` and `mutation`.
 - Keep request and response contracts explicit in `types`.
@@ -26,14 +27,17 @@ src/api/
 ## Responsibilities
 
 ### `query/`
+
 - Read-only request functions.
 - Typical usage: fetch list or detail data.
 
 ### `mutation/`
+
 - Write/update request functions.
 - Typical usage: HTTP create/update/delete actions. Wallet transactions are not HTTP mutations.
 
 ### `types/`
+
 - Shared API contracts used by `query`/`mutation` and callers.
 
 ## Request Rules
@@ -88,11 +92,13 @@ See `src/lib/README.md` for the full HTTP error contract.
 Client page components must not request server APIs directly.
 
 Allowed flow:
+
 1. Component uses hook from `src/hooks`.
 2. Hook calls function from `src/api`.
 3. API function performs request through `apiRequest` or `httpRequest`.
 
 Disallowed in client components:
+
 - Directly calling request methods (`fetch`, `ky`, etc.).
 - Bypassing hooks to call remote endpoints in arbitrary ways.
 

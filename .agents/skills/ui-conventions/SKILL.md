@@ -1,4 +1,5 @@
 ---
+
 name: ui-conventions
 description: Use when implementing or refactoring src/ui page modules, shared components, providers, shadcn wrappers, SVG components, route UI mapped from src/app, component composition, props boundaries, or page splitting.
 ---

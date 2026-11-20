@@ -3,6 +3,7 @@
 This directory contains the project’s lowest-level infrastructure modules.
 
 Goals:
+
 - Centralize shared infrastructure primitives (error model, HTTP wrappers, runtime init, web3 state).
 - Keep cross-cutting behavior consistent across UI, hooks, and API layers.
 - Keep this layer stable and hard to change by default.
@@ -23,10 +24,12 @@ src/lib/
 ## Responsibilities
 
 ### `abis/`
+
 - Stores contract ABI assets.
 - Use this folder when adding/updating contract interface files.
 
 ### `common/errors/`
+
 - Defines base error model (`BaseError`) and typed errors (request/EVM).
 - Provides global `errorStore` for unified client-side error handling.
 - `BaseError.needFix` is used by HTTP response wrappers to distinguish fix-needed errors.
@@ -34,20 +37,24 @@ src/lib/
 - `BaseError.publicData` contains explicitly client-safe error details, or `null` when omitted.
 
 ### `common/web3/`
+
 - Defines `wagmiConfig` and wallet connector setup.
 - Defines global EVM store (`evmStore`) and hooks (`useEvmStore`).
 - Converts third-party wagmi/viem errors to project-level error classes.
 
 ### `http/`
+
 - `ky.ts`: public `apiRequest` and `httpRequest` helpers with unified error conversion.
 - `next.ts`: `withResponse` wrapper for Next.js route handlers (`src/app/api/**`).
 - `react-query.ts`: shared `queryClient`; QueryCache and MutationCache bridge errors to `errorStore`.
 
 ### `runtime/`
+
 - Initializes and wires global runtime behavior (`initializeEvmStore`, `initializeErrorStore`).
 - Uses reference counting to prevent duplicated listeners/watchers.
 
 ### `utils/`
+
 - Stores reusable pure utilities.
 - Current groups:
   - `formatter/`: number/time/text and token amount formatting helpers (with tests).
@@ -60,6 +67,7 @@ By default, only `utils/` and `abis/` (abi-related assets) should be modified in
 Do not modify `src/lib/utils/shadcn/**`; treat it as shadcn support code.
 
 For other directories (`common/`, `http/`, `runtime/`):
+
 - Treat them as foundational infrastructure.
 - Do not modify unless there is a clear new business requirement that must change global behavior.
 - Any change here should be minimal, explicit, and validated for cross-project impact.

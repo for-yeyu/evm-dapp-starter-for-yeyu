@@ -1,6 +1,7 @@
 # EVM DApp Starter
 
 A Next.js + React Query + wagmi starter focused on clean layering:
+
 - `app` is route entry only.
 - `ui` is page/component implementation.
 - `api` contains HTTP request functions.

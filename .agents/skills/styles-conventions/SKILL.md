@@ -1,4 +1,5 @@
 ---
+
 name: styles-conventions
 description: Use when adding global styles, font setup, or CSS imports under src/styles.
 ---

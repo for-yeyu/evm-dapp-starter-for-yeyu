@@ -1,4 +1,5 @@
 ---
+
 name: api-conventions
 description: Use when creating or updating src/api request functions, contracts, direct module imports, query/mutation separation, and HTTP transport choices; combine with app-router-conventions for local src/app/api endpoints.
 ---

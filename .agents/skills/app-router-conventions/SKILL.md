@@ -1,4 +1,5 @@
 ---
+
 name: app-router-conventions
 description: Use when creating or modifying src/app route entries, page/layout wrappers, framework boundary files, src/app/api/** route handlers, and app-to-ui route mapping.
 ---
